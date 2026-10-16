@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ومضات ذكية مع منى مصطفى | بناء أدوات التقييم في العلوم والرياضيات</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Frank+Ruhl+Libre:wght@400;700;900&family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue: #1a4f8a;
+    --blue-light: #2d6fc4;
+    --blue-pale: #e8f0fb;
+    --blue-mid: #b8d0f0;
+    --gold: #c8930a;
+    --gold-light: #f5c842;
+    --gold-pale: #fdf6e0;
+    --text: #1c2333;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    --bg: #f7f9fc;
+    --bg-card: #ffffff;
+    --border: #d8e2f0;
+    --success: #276749;
+    --success-bg: #e6f4ee;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 16px rgba(26,79,138,0.08);
+    --shadow-hover: 0 6px 28px rgba(26,79,138,0.14);
+    --font-main: 'Cairo', 'Heebo', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-main);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* LANG SWITCHER */
+  .lang-bar {
+    background: #0f3460;
+    padding: 8px 24px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+  }
+  .lang-bar span {
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    margin-left: 4px;
+  }
+  .lang-btn {
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.85);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-main);
+  }
+  .lang-btn:hover { background: rgba(255,255,255,0.22); color: white; }
+  .lang-btn.active { background: var(--gold); color: #1a1a1a; border-color: var(--gold); }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--blue) 0%, #0f3460 100%);
+    color: white;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: -40px;
+    width: 250px; height: 250px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 32px 36px;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+  .header-logo {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 18px;
+    border: 4px solid var(--gold-light);
+    box-shadow: 0 0 0 3px rgba(245,200,66,0.25), 0 6px 24px rgba(0,0,0,0.35);
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background: #0a0a1a;
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(200,147,10,0.25);
+    color: var(--gold-light);
+    border: 1px solid rgba(245,200,66,0.4);
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 5px 18px;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+  .header h1 {
+    font-family: var(--font-main);
+    font-size: 1.9rem;
+    font-weight: 800;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    color: white;
+  }
+  .header h1 .brand { color: var(--gold-light); }
+  .header-subtitle {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 24px;
+  }
+  .counselor-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 60px;
+    padding: 10px 22px 10px 14px;
+  }
+  .counselor-avatar {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--gold-light);
+    box-shadow: 0 0 0 2px rgba(245,200,66,0.2);
+    background: #0a0a1a;
+    flex-shrink: 0;
+  }
+  .counselor-info .name {
+    font-weight: 700; font-size: 15px; color: white;
+  }
+  .counselor-info .role {
+    font-size: 12px; color: rgba(255,255,255,0.7);
+  }
+
+  /* QUOTE */
+  .quote-section {
+    background: var(--gold-pale);
+    border-bottom: 2px solid var(--gold-light);
+  }
+  .quote-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 32px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .quote-mark {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 60px;
+    line-height: 0.7;
+    color: var(--gold);
+    flex-shrink: 0;
+    margin-top: 8px;
+  }
+  .quote-text {
+    font-size: 0.97rem;
+    color: #6b4c00;
+    font-style: italic;
+    line-height: 1.7;
+  }
+
+  /* MAIN */
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 32px 60px;
+  }
+
+  #step-welcome { display: block; }
+  #step-main { display: none; }
+
+  .welcome-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 48px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .welcome-box h2 {
+    font-family: var(--font-main);
+    font-size: 1.8rem;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+  .welcome-box p { color: var(--text-secondary); margin-bottom: 32px; font-size: 1rem; }
+  .name-input-row {
+    display: flex;
+    gap: 12px;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+  input[type="text"] {
+    flex: 1;
+    padding: 13px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-main);
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.2s;
+    direction: rtl;
+  }
+  input[type="text"]:focus { border-color: var(--blue-light); background: white; }
+  .btn-primary {
+    background: var(--blue);
+    color: white;
+    border: none;
+    padding: 13px 28px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-main);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .btn-primary:hover { background: var(--blue-light); transform: translateY(-1px); }
+  .btn-primary:active { transform: scale(0.98); }
+
+  /* GREETING */
+  .greeting-bar {
+    background: var(--blue-pale);
+    border: 1px solid var(--blue-mid);
+    border-radius: var(--radius-sm);
+    padding: 14px 20px;
+    font-size: 15px;
+    color: var(--blue);
+    font-weight: 500;
+    margin-bottom: 28px;
+  }
+  .greeting-bar span { font-weight: 700; }
+
+  /* LANG & SUBJECT SELECTION ROW */
+  .config-selection {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .config-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 16px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    box-shadow: var(--shadow);
+  }
+  .config-card:hover { border-color: var(--blue-light); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .config-card.active { border-color: var(--blue); background: var(--blue-pale); }
+  .config-card .icon { font-size: 26px; margin-bottom: 6px; display: block; }
+  .config-card h4 { font-size: 14px; font-weight: 700; color: var(--blue); margin-bottom: 3px; }
+  .config-card p { font-size: 12px; color: var(--text-muted); }
+  .config-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .config-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* TOOL TYPE SELECTION */
+  .tool-type-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .tool-type-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    box-shadow: var(--shadow);
+  }
+  .tool-type-card:hover { border-color: var(--gold); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .tool-type-card.active { border-color: var(--gold); background: var(--gold-pale); }
+  .tool-type-card .icon { font-size: 24px; margin-bottom: 6px; display: block; }
+  .tool-type-card h4 { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .tool-type-card p { font-size: 11px; color: var(--text-muted); }
+
+  /* MODE CARDS */
+  .mode-section h2 { font-size: 1.05rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 14px; }
+  .mode-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .mode-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    box-shadow: var(--shadow);
+  }
+  .mode-card:hover { border-color: var(--blue-light); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .mode-card.active { border-color: var(--blue); background: var(--blue-pale); }
+  .mode-icon { font-size: 34px; margin-bottom: 10px; display: block; }
+  .mode-card h3 { font-size: 1rem; font-weight: 700; color: var(--blue); margin-bottom: 5px; }
+  .mode-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+  /* PANELS */
+  .panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .panel-header {
+    background: var(--blue);
+    color: white;
+    padding: 16px 24px;
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .panel-body { padding: 28px 24px; }
+
+  /* FORM */
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; font-weight: 600; font-size: 14px; color: var(--text); margin-bottom: 8px; }
+  select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-main);
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    cursor: pointer;
+    direction: rtl;
+    transition: border-color 0.2s;
+  }
+  select:focus { border-color: var(--blue-light); background: white; }
+  textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-main);
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    resize: vertical;
+    min-height: 90px;
+    outline: none;
+    direction: rtl;
+    transition: border-color 0.2s;
+  }
+  textarea:focus { border-color: var(--blue-light); background: white; }
+
+  /* CHECKBOXES */
+  .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    font-size: 14px;
+  }
+  .check-item:hover { border-color: var(--blue-light); background: var(--blue-pale); }
+  .check-item input { width: 16px; height: 16px; cursor: pointer; accent-color: var(--blue); }
+
+  /* SECTIONS */
+  .sections-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .btn-add {
+    background: var(--blue-pale);
+    color: var(--blue);
+    border: 1.5px solid var(--blue-mid);
+    border-radius: var(--radius-sm);
+    padding: 8px 16px;
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-add:hover { background: var(--blue); color: white; }
+  .section-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 12px;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .section-row input[type="text"],
+  .section-row input[type="number"] {
+    padding: 9px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-main);
+    font-size: 13px;
+    background: white;
+    outline: none;
+    width: 100%;
+    direction: rtl;
+  }
+  .section-row input:focus { border-color: var(--blue-light); }
+  .btn-remove {
+    background: none;
+    border: 1px solid #fca5a5;
+    border-radius: var(--radius-sm);
+    color: #dc2626;
+    width: 32px; height: 32px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-remove:hover { background: #fee2e2; }
+  .totals-row {
+    display: flex;
+    gap: 16px;
+    padding: 12px 14px;
+    background: var(--blue-pale);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    color: var(--blue);
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
+  /* GENERATE */
+  .generate-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--blue), var(--blue-light));
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-main);
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(26,79,138,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .generate-btn:hover { box-shadow: 0 6px 28px rgba(26,79,138,0.35); transform: translateY(-1px); }
+  .generate-btn:active { transform: scale(0.99); }
+
+  /* RESULT */
+  .result-box {
+    display: none;
+    background: var(--bg-card);
+    border: 2px solid var(--success);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-top: 28px;
+  }
+  .result-header {
+    background: var(--success);
+    color: white;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .result-header span { font-size: 1rem; font-weight: 700; }
+  .copy-btn {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: var(--radius-sm);
+    padding: 7px 18px;
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.3); }
+  .result-prompt {
+    padding: 24px;
+    font-size: 13.5px;
+    line-height: 1.85;
+    color: var(--text);
+    white-space: pre-wrap;
+    font-family: var(--font-main);
+    direction: rtl;
+    text-align: right;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  /* IMPROVE PANEL */
+  #panel-improve { display: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .mode-cards { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .checkbox-grid { grid-template-columns: 1fr; }
+    .section-row { grid-template-columns: 1fr 1fr; }
+    .header h1 { font-size: 1.45rem; }
+    .name-input-row { flex-direction: column; }
+    .main { padding: 28px 16px 48px; }
+    .config-selection { grid-template-columns: 1fr; }
+    .tool-type-cards { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* LTR overrides for English mode */
+  body.ltr { direction: ltr; }
+  body.ltr input[type="text"],
+  body.ltr select,
+  body.ltr textarea { direction: ltr; text-align: left; }
+  body.ltr .result-prompt { direction: ltr; text-align: left; }
+
+  /* ===== additions for the science & math edition ===== */
+  .subject-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+  .subject-cards .config-card { padding: 16px 10px; }
+  .hint {
+    background: var(--gold-pale); border: 1px solid var(--gold-light); border-radius: var(--radius-sm);
+    padding: 10px 14px; margin-bottom: 14px; font-size: 13px; color: #6b4c00; line-height: 1.7;
+  }
+  .hint strong { color: #6b4c00; }
+  .radio-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .radio-card {
+    display: flex; gap: 10px; align-items: flex-start; padding: 14px 16px; cursor: pointer;
+    border: 2px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-card); transition: all 0.2s;
+  }
+  .radio-card:hover { border-color: var(--blue-light); }
+  .radio-card.active { border-color: var(--blue); background: var(--blue-pale); }
+  .radio-card input { margin-top: 5px; accent-color: var(--blue); }
+  .radio-card h4 { font-size: 14px; color: var(--blue); margin-bottom: 2px; }
+  .radio-card p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .std-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 6px; }
+  .std-table th { background: var(--blue-pale); color: var(--blue); font-weight: 700; padding: 8px; border: 1px solid var(--border); }
+  .std-table td { padding: 7px 8px; border: 1px solid var(--border); text-align: center; }
+  .std-table td:nth-child(2) { text-align: right; }
+  .std-table tr.sec td { background: var(--gold-pale); font-weight: 700; color: #6b4c00; text-align: right; }
+  .field-note { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+  .req { color: #dc2626; }
+  .reminder {
+    margin: 0; padding: 14px 24px; background: var(--gold-pale); border-bottom: 1px solid var(--gold-light);
+    font-size: 13.5px; color: #6b4c00; line-height: 1.8;
+  }
+  .text-box { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 14px; }
+  .text-box .grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .text-box label { font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px; }
+  .text-box input, .text-box select, .text-box textarea { font-size: 13px; }
+  .text-box input[type="number"], .section-row input[type="number"] {
+    width: 100%; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    font-family: var(--font-main); background: white; outline: none;
+  }
+  input[type="number"] { font-family: var(--font-main); }
+  .section-row input[type="text"] { min-width: 0; }
+  .footer-note { text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 28px; }
+  @media (max-width: 640px) {
+    .subject-cards { grid-template-columns: 1fr 1fr; }
+    .radio-row { grid-template-columns: 1fr; }
+    .text-box .grid4 { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LANGUAGE BAR -->
+<div class="lang-bar">
+  <span data-t="ui_lang">لغة الواجهة:</span>
+  <button class="lang-btn active" onclick="setUILang('ar', this)">العربية</button>
+  <button class="lang-btn" onclick="setUILang('he', this)">עברית</button>
+  <button class="lang-btn" onclick="setUILang('en', this)">English</button>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <img src="https://i.postimg.cc/SNgVgv8L/my-new-icon.png" alt="ومضات ذكية" class="header-logo" onerror="this.style.display='none'">
+    <div class="header-badge" data-t="badge">✨ علوم ورياضيات · المنصة الذكية لبناء أدوات التقييم</div>
+    <h1><span class="brand" data-t="brand">ومضات ذكية</span><br><span data-t="tagline">مع منى مصطفى</span></h1>
+    <p class="header-subtitle" data-t="subtitle">المنصة الذكية لبناء أدوات التقييم في العلوم والرياضيات</p>
+    <div class="counselor-card">
+      <img src="https://i.postimg.cc/SNgVgv8L/my-new-icon.png" alt="منى مصطفى" class="counselor-avatar" onerror="this.style.background='linear-gradient(135deg,#c8930a,#e8a200)'; this.src=''; this.alt='مم';">
+      <div class="counselor-info">
+        <div class="name" data-t="counselor_name">منى مصطفى</div>
+        <div class="role" data-t="counselor_role">منسّقة القياس والتقويم</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUOTE -->
+<div class="quote-section">
+  <div class="quote-inner">
+    <div class="quote-mark">"</div>
+    <div class="quote-text" data-t="quote">زميلي المعلم، زميلتي المعلمة.. يسعدني مرافقتكم معاً لنرفع جودة التقييم لدى طلابنا وندعم مسار تعلمهم باحترافية ومحبة.</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- STEP 1: WELCOME -->
+  <div id="step-welcome">
+    <div class="welcome-box">
+      <h2 data-t="welcome_title">🎉 أهلاً وسهلاً بالمنصة</h2>
+      <p data-t="welcome_desc">أدخل اسمك لنتمكن من تخصيص تجربتك</p>
+      <div class="name-input-row">
+        <input type="text" id="teacher-name-input" data-placeholder-t="teacher_placeholder" placeholder="اسم المعلم / المعلمة..." />
+        <button class="btn-primary" onclick="startPlatform()" data-t="start_btn">ابدأ ←</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: MAIN -->
+  <div id="step-main">
+
+    <div class="greeting-bar" id="greeting-bar"></div>
+
+    <!-- SUBJECT -->
+    <div class="config-section-title" data-t="subject_title">🔬 المادة</div>
+    <div class="subject-cards" id="subject-cards"></div>
+
+    <!-- EXAM LANGUAGE -->
+    <div class="config-section-title" data-t="exam_lang_title">📚 لغة الاختبار</div>
+    <div class="config-selection" style="margin-bottom:20px;">
+      <div class="config-card active" id="xlang-ar" onclick="setExamLang('ar')">
+        <span class="icon">🌙</span><h4 data-t="ar_lang">اللغة العربية</h4><p>عربي</p>
+      </div>
+      <div class="config-card" id="xlang-he" onclick="setExamLang('he')">
+        <span class="icon">🇮🇱</span><h4 data-t="he_lang">اللغة العبرية</h4><p>עברית</p>
+      </div>
+      <div class="config-card" id="xlang-en" onclick="setExamLang('en')">
+        <span class="icon">🌐</span><h4 data-t="en_lang">اللغة الإنجليزية</h4><p>English</p>
+      </div>
+    </div>
+
+    <!-- TOOL TYPE -->
+    <div class="config-section-title" data-t="tool_type_title">🛠️ نوع الأداة</div>
+    <div class="tool-type-cards" style="margin-bottom:28px;">
+      <div class="tool-type-card" id="tool-quiz" onclick="setToolType('quiz')"><span class="icon">⚡</span><h4 data-t="tool_quiz">اختبار قصير</h4><p>Quiz</p></div>
+      <div class="tool-type-card" id="tool-task" onclick="setToolType('task')"><span class="icon">📌</span><h4 data-t="tool_task">مهمة</h4><p>Task</p></div>
+      <div class="tool-type-card" id="tool-worksheet" onclick="setToolType('worksheet')"><span class="icon">📄</span><h4 data-t="tool_worksheet">ورقة عمل</h4><p>Worksheet</p></div>
+      <div class="tool-type-card active" id="tool-exam" onclick="setToolType('exam')"><span class="icon">🏆</span><h4 data-t="tool_exam">امتحان</h4><p>Exam</p></div>
+    </div>
+
+    <!-- MODE -->
+    <div class="mode-section">
+      <h2 data-t="mode_title">اختر ما تريد القيام به:</h2>
+      <div class="mode-cards">
+        <div class="mode-card active" id="card-build" onclick="switchMode('build')">
+          <span class="mode-icon">📝</span>
+          <h3 data-t="mode_build">بناء أداة جديدة</h3>
+          <p data-t="mode_build_desc">إنشاء أداة تقييم منظمة من الصفر وفق إعدادات مخصصة</p>
+        </div>
+        <div class="mode-card" id="card-improve" onclick="switchMode('improve')">
+          <span class="mode-icon">🔍</span>
+          <h3 data-t="mode_improve">تحسين أداة موجودة</h3>
+          <p data-t="mode_improve_desc">تقييم وتطوير أداة جاهزة وفق المعايير المطلوبة</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUILD PANEL -->
+    <div id="panel-build">
+
+      <!-- DETAILS -->
+      <div class="panel">
+        <div class="panel-header" data-t="panel_details">📋 تفاصيل الأداة</div>
+        <div class="panel-body">
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0"><label data-t="grade_label">الصف</label><select id="grade"></select></div>
+            <div class="form-group" style="margin-bottom:0"><label data-t="level_label">المستوى / المسار</label><select id="level"></select></div>
+          </div>
+          <div class="form-row" style="margin-top:16px; margin-bottom:0">
+            <div class="form-group" style="margin-bottom:0"><label data-t="duration_label">مدة الأداة</label><select id="duration"></select></div>
+            <div class="form-group" style="margin-bottom:0"><label data-t="total_label">العلامة الكلية</label><select id="total-mark"><option>100</option><option>50</option><option>40</option><option>30</option><option>20</option></select></div>
+          </div>
+          <div class="form-group" style="margin-top:16px; margin-bottom:0">
+            <label data-t="unit_label">الوحدة / الموضوع العام</label>
+            <input type="text" id="unit" data-placeholder-t="unit_placeholder" placeholder="مثال: القوى والتأثير المتبادل" style="width:100%" />
+          </div>
+          <div class="form-group" style="margin-top:16px; margin-bottom:0">
+            <label><span data-t="exam_title_label">عنوان الأداة</span> <span style="font-weight:400; color:var(--text-muted)" data-t="optional">(اختياري – إذا تركته سيختار الذكاء الاصطناعي)</span></label>
+            <input type="text" id="exam-title" data-placeholder-t="exam_title_placeholder" placeholder="مثال: امتحان نهاية الوحدة في الفيزياء" style="width:100%" />
+          </div>
+        </div>
+      </div>
+
+      <!-- TOPICS -->
+      <div class="panel">
+        <div class="panel-header" data-t="topics_header">📚 المواضيع والمهارات المطلوبة</div>
+        <div class="panel-body">
+          <div class="hint" data-t="topics_hint">💡 هذه أهم معلومة: اكتب كل موضوع في سطر، ومعه القانون أو المصطلحات أو المهارة كما شرحتموها في الصف. المحرك لن يسأل عن شيء غير مذكور هنا.</div>
+          <div class="form-group">
+            <label><span data-t="topics_label">المواضيع المطلوبة</span> <span class="req">*</span></label>
+            <textarea id="topics" style="min-height:130px" data-placeholder-t="topics_placeholder"></textarea>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label><span data-t="excluded_label">ما لم يُدرَّس أو غير مطلوب</span> <span style="font-weight:400; color:var(--text-muted)" data-t="optional_short">(اختياري)</span></label>
+            <textarea id="excluded" style="min-height:70px" data-placeholder-t="excluded_placeholder"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ATTACHMENTS -->
+      <div class="panel">
+        <div class="panel-header" data-t="attach_header">📎 المرفقات التي سترفقها مع الأمر</div>
+        <div class="panel-body">
+          <div class="hint" data-t="attach_hint">💡 صوّر اللوح وصفحات الكتاب بإضاءة جيدة ومن الأمام، وارفع فقط ما يخص مواضيع الأداة. صورة لموضوع آخر قد تُدخل أسئلة لم تقصدها.</div>
+          <div class="checkbox-grid" id="attach-grid"></div>
+        </div>
+      </div>
+
+      <!-- STRUCTURE -->
+      <div class="panel">
+        <div class="panel-header" data-t="panel_structure">📊 هيكل الأداة وتوزيع الدرجات</div>
+        <div class="panel-body">
+          <div class="radio-row">
+            <label class="radio-card active" id="struct-std-card">
+              <input type="radio" name="struct" value="std" checked onchange="setStructure('std')">
+              <div><h4 data-t="struct_std">المبنى المعتمد (15 سؤالًا)</h4><p data-t="struct_std_desc">قسمان: 60 معرفة وفهم وتطبيق + 40 تحليل واستنتاج، متدرّج حسب سلّم بلوم</p></div>
+            </label>
+            <label class="radio-card" id="struct-custom-card">
+              <input type="radio" name="struct" value="custom" onchange="setStructure('custom')">
+              <div><h4 data-t="struct_custom">مبنى مخصص</h4><p data-t="struct_custom_desc">حدّد بنفسك الأقسام وعدد الأسئلة والدرجات</p></div>
+            </label>
+          </div>
+
+          <div id="std-structure"></div>
+
+          <div id="custom-structure" style="display:none">
+            <div class="sections-header">
+              <label style="font-weight:600; font-size:14px; color:var(--text)" data-t="sections_label">أقسام الأداة – الموضوع والأسئلة والدرجات</label>
+              <button class="btn-add" onclick="addSection()" data-t="add_section">+ إضافة قسم</button>
+            </div>
+            <div id="sections-container"></div>
+            <div class="totals-row">
+              <span><span data-t="total_q">إجمالي الأسئلة:</span> <span id="total-q">0</span></span>
+              <span>·</span>
+              <span><span data-t="total_pts">إجمالي الدرجات:</span> <span id="total-pts">0</span></span>
+            </div>
+          </div>
+
+          <!-- SCIENTIFIC TEXTS -->
+          <div style="margin-top:24px; border-top:1px solid var(--border); padding-top:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <label style="font-weight:700; font-size:14px; color:var(--blue);" data-t="sci_text_label">📄 نص علمي (قراءة وفهم وتحليل)</label>
+              <button class="btn-add" onclick="addSciText()" data-t="add_sci_text">+ إضافة نص علمي</button>
+            </div>
+            <div class="hint" id="sci-text-hint" data-t="sci_text_hint">💡 مهارة شائعة جدًا في الأحياء والعلوم. يمكنك لصق نص من اختيارك، أو ترك الحقل فارغًا ليكتب المحرك نصًا جديدًا مبنيًا على المواضيع المطلوبة فقط. في المبنى المعتمد يحلّ النص محل السؤالين 13 و14 (16 علامة).</div>
+            <div id="sci-texts-container"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONVENTIONS -->
+      <div class="panel">
+        <div class="panel-header" data-t="conv_header">⚙️ اصطلاحات الصف وما يُسمح به</div>
+        <div class="panel-body">
+          <div class="checkbox-grid" id="conv-grid" style="margin-bottom:14px"></div>
+          <textarea id="conv-notes" style="min-height:60px" data-placeholder-t="conv_placeholder"></textarea>
+        </div>
+      </div>
+
+      <!-- QUESTION TYPES -->
+      <div class="panel">
+        <div class="panel-header" data-t="qtypes_header">✏️ أنواع الأسئلة المفضلة</div>
+        <div class="panel-body"><div class="checkbox-grid" id="qtypes-grid"></div></div>
+      </div>
+
+      <!-- COMPONENTS -->
+      <div class="panel">
+        <div class="panel-header" data-t="comp_header">🧩 مكونات الأداة ومعايير الجودة</div>
+        <div class="panel-body"><div class="checkbox-grid" id="comp-grid"></div></div>
+      </div>
+
+      <!-- NOTES -->
+      <div class="panel">
+        <div class="panel-header" data-t="notes_header">📝 ملاحظات إضافية</div>
+        <div class="panel-body">
+          <textarea id="notes" style="margin-bottom:0" data-placeholder-t="notes_placeholder"></textarea>
+        </div>
+      </div>
+
+      <button class="generate-btn" onclick="generateBuild()" data-t="generate_btn">✨ أنشئ الأمر الذكي ←</button>
+    </div>
+
+    <!-- IMPROVE PANEL -->
+    <div id="panel-improve">
+      <div class="panel">
+        <div class="panel-header" data-t="improve_header">🔍 تحسين أداة موجودة</div>
+        <div class="panel-body">
+          <p style="color:var(--text-secondary); font-size:14px; margin-bottom:20px;" data-t="improve_desc">سيتيح هذا الأمر للذكاء الاصطناعي تحسين وتوسيع وتكييف الأداة المرفقة وفق المعايير المطلوبة، مع الحفاظ على تعديلاتك.</p>
+          <div class="form-group">
+            <label data-t="improve_subject_label">مادة الأداة المرفقة</label>
+            <select id="improve-subject"></select>
+          </div>
+          <div class="form-group">
+            <label data-t="improve_grade_label">الصف والمستوى</label>
+            <div style="display:flex; gap:10px;">
+              <select id="improve-grade" style="flex:1"></select>
+              <select id="improve-level" style="flex:1"></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label data-t="improve_check_label">ما الذي تريد تحسينه؟</label>
+            <div class="checkbox-grid" id="improve-grid"></div>
+          </div>
+          <div class="form-group">
+            <label data-t="improve_notes_label">طلبات تحسين محددة</label>
+            <textarea id="improve-notes" data-placeholder-t="improve_notes_placeholder"></textarea>
+          </div>
+          <button class="generate-btn" onclick="generateImprove()" data-t="improve_btn">✨ أنشئ أمر التحسين ←</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result-box" id="result-box">
+      <div class="result-header">
+        <span id="result-ready">✅ الأمر جاهز! انسخه والصقه في Claude أو ChatGPT</span>
+        <button class="copy-btn" onclick="copyPrompt()">📋 انسخ الأمر</button>
+      </div>
+      <div class="reminder" id="reminder" style="display:none"></div>
+      <div class="result-prompt" id="result-prompt"></div>
+    </div>
+
+    <div class="footer-note" data-t="footer">ومضات ذكية · نسخة العلوم والرياضيات</div>
+  </div><!-- /step-main -->
+</div><!-- /main -->
+
+<script>
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+let teacherName = '';
+let currentMode = 'build';
+let uiLang = 'ar';
+let subject = 'physics';
+let examLang = 'ar';
+let toolType = 'exam';
+let structure = 'std';
+
+// ══════════════════════════════════════════
+//  TRANSLATIONS (interface)
+// ══════════════════════════════════════════
+const T = {
+  ar: {
+    ui_lang: 'لغة الواجهة:',
+    badge: '✨ علوم ورياضيات · المنصة الذكية لبناء أدوات التقييم',
+    brand: 'ومضات ذكية', tagline: 'مع منى مصطفى',
+    subtitle: 'المنصة الذكية لبناء أدوات التقييم في العلوم والرياضيات',
+    counselor_name: 'منى مصطفى', counselor_role: 'منسّقة القياس والتقويم',
+    quote: 'زميلي المعلم، زميلتي المعلمة.. يسعدني مرافقتكم معاً لنرفع جودة التقييم لدى طلابنا وندعم مسار تعلمهم باحترافية ومحبة.',
+    welcome_title: '🎉 أهلاً وسهلاً بالمنصة', welcome_desc: 'أدخل اسمك لنتمكن من تخصيص تجربتك',
+    teacher_placeholder: 'اسم المعلم / المعلمة...', start_btn: 'ابدأ ←',
+    subject_title: '🔬 المادة', exam_lang_title: '📚 لغة الاختبار',
+    ar_lang: 'اللغة العربية', he_lang: 'اللغة العبرية', en_lang: 'اللغة الإنجليزية',
+    tool_type_title: '🛠️ نوع الأداة', tool_quiz: 'اختبار قصير', tool_task: 'مهمة', tool_worksheet: 'ورقة عمل', tool_exam: 'امتحان',
+    mode_title: 'اختر ما تريد القيام به:',
+    mode_build: 'بناء أداة جديدة', mode_build_desc: 'إنشاء أداة تقييم منظمة من الصفر وفق إعدادات مخصصة',
+    mode_improve: 'تحسين أداة موجودة', mode_improve_desc: 'تقييم وتطوير أداة جاهزة وفق المعايير المطلوبة',
+    panel_details: '📋 تفاصيل الأداة', grade_label: 'الصف', level_label: 'المستوى / المسار',
+    duration_label: 'مدة الأداة', total_label: 'العلامة الكلية', minutes: 'دقيقة',
+    unit_label: 'الوحدة / الموضوع العام', unit_placeholder: 'مثال: القوى والتأثير المتبادل',
+    exam_title_label: 'عنوان الأداة', optional: '(اختياري – إذا تركته سيختار الذكاء الاصطناعي)', optional_short: '(اختياري)',
+    exam_title_placeholder: 'مثال: امتحان نهاية الوحدة',
+    topics_header: '📚 المواضيع والمهارات المطلوبة',
+    topics_hint: '💡 هذه أهم معلومة: اكتب كل موضوع في سطر، ومعه القانون أو المصطلحات أو المهارة كما شرحتموها في الصف. المحرك لن يسأل عن شيء غير مذكور هنا.',
+    topics_label: 'المواضيع المطلوبة', excluded_label: 'ما لم يُدرَّس أو غير مطلوب',
+    excluded_placeholder: 'مثال: قانون طاقة الحركة لم يُشرح – تُعطى قيمتها جاهزة',
+    attach_header: '📎 المرفقات التي سترفقها مع الأمر',
+    attach_hint: '💡 صوّر اللوح وصفحات الكتاب بإضاءة جيدة ومن الأمام، وارفع فقط ما يخص مواضيع الأداة. صورة لموضوع آخر قد تُدخل أسئلة لم تقصدها.',
+    panel_structure: '📊 هيكل الأداة وتوزيع الدرجات',
+    struct_std: 'المبنى المعتمد (15 سؤالًا)', struct_std_desc: 'قسمان: 60 معرفة وفهم وتطبيق + 40 تحليل واستنتاج، متدرّج حسب سلّم بلوم',
+    struct_custom: 'مبنى مخصص', struct_custom_desc: 'حدّد بنفسك الأقسام وعدد الأسئلة والدرجات',
+    sections_label: 'أقسام الأداة – الموضوع والأسئلة والدرجات', add_section: '+ إضافة قسم',
+    sec_topic_ph: 'نوع القسم أو موضوعه...', sec_q_ph: 'أسئلة', sec_pts_ph: 'درجات',
+    total_q: 'إجمالي الأسئلة:', total_pts: 'إجمالي الدرجات:',
+    sci_text_label: '📄 نص علمي (قراءة وفهم وتحليل)', add_sci_text: '+ إضافة نص علمي',
+    sci_text_hint: '💡 مهارة شائعة جدًا في الأحياء والعلوم. يمكنك لصق نص من اختيارك، أو ترك الحقل فارغًا ليكتب المحرك نصًا جديدًا مبنيًا على المواضيع المطلوبة فقط. في المبنى المعتمد يحلّ النص محل السؤالين 13 و14 (16 علامة).',
+    st_title: '📄 نص علمي', st_topic: 'الموضوع', st_words: 'عدد الكلمات', st_q: 'أسئلة', st_pts: 'درجات',
+    st_extra: 'يتضمّن', st_text: 'النص (اختياري – الصقه هنا)', st_text_ph: 'الصق النص هنا، أو اتركه فارغًا ليُكتب نص جديد...',
+    st_none: 'بدون إضافات', st_table: 'جدول بيانات', st_graph: 'رسم بياني', st_exp: 'وصف تجربة',
+    conv_header: '⚙️ اصطلاحات الصف وما يُسمح به', conv_placeholder: 'اصطلاحات أخرى (رموز، وحدات، طريقة كتابة)...',
+    qtypes_header: '✏️ أنواع الأسئلة المفضلة', comp_header: '🧩 مكونات الأداة ومعايير الجودة',
+    notes_header: '📝 ملاحظات إضافية',
+    notes_placeholder: 'مثال: استوحِ الأسئلة من أسئلة الكتاب المرفقة، مستوى الصف متوسط، ركّز على مهارات الاستنتاج...',
+    generate_btn: '✨ أنشئ الأمر الذكي ←',
+    improve_header: '🔍 تحسين أداة موجودة',
+    improve_desc: 'سيتيح هذا الأمر للذكاء الاصطناعي تحسين وتوسيع وتكييف الأداة المرفقة وفق المعايير المطلوبة، مع الحفاظ على تعديلاتك.',
+    improve_subject_label: 'مادة الأداة المرفقة', improve_grade_label: 'الصف والمستوى',
+    improve_check_label: 'ما الذي تريد تحسينه؟', improve_notes_label: 'طلبات تحسين محددة',
+    improve_notes_placeholder: 'مثال: أضف مادة جديدة (دمج قانون نيوتن الثاني مع قوانين الحركة)، أنشئ صورة للسؤال 14...',
+    improve_btn: '✨ أنشئ أمر التحسين ←',
+    result_ready: '✅ الأمر جاهز! انسخه والصقه في Claude أو ChatGPT', copy_btn: '📋 انسخ الأمر', copy_success: '✅ تم النسخ!',
+    reminder: '📎 لا تنسَ أن ترفق مع الأمر: ', reminder_improve: '📎 لا تنسَ أن ترفق مع الأمر آخر نسخة من الأداة (ملف Word).',
+    need_topics: 'الرجاء كتابة المواضيع المطلوبة أولًا.',
+    greeting: (n) => `مرحباً، <span>${n}</span>! 👋 ماذا تريد أن تفعل اليوم؟`,
+    footer: 'ومضات ذكية · نسخة العلوم والرياضيات',
+    topics_placeholder: '',
+    std_cols: ['السؤال', 'النوع', 'بلوم', 'العلامة'],
+  },
+  he: {
+    ui_lang: 'שפת ממשק:',
+    badge: '✨ מדעים ומתמטיקה · פלטפורמה חכמה לבניית כלי הערכה',
+    brand: 'הבזקים חכמים', tagline: 'עם מונא מוסטפא',
+    subtitle: 'הפלטפורמה החכמה לבניית כלי הערכה במדעים ובמתמטיקה',
+    counselor_name: 'מונא מוסטפא', counselor_role: 'רכזת הערכה ומדידה',
+    quote: 'עמיתי המורה, עמיתתי המורה.. אני שמחה מאוד ללוות אתכם יחד כדי שנרים את איכות ההערכה של תלמידינו ונתמוך במסלול הלמידה שלהם במקצועיות ובאהבה.',
+    welcome_title: '🎉 ברוכים הבאים לפלטפורמה', welcome_desc: 'הכניסו את שמכם כדי שנוכל להתאים אישית את החוויה שלכם',
+    teacher_placeholder: 'שם המורה...', start_btn: 'התחילו ←',
+    subject_title: '🔬 מקצוע', exam_lang_title: '📚 שפת הבחינה',
+    ar_lang: 'ערבית', he_lang: 'עברית', en_lang: 'אנגלית',
+    tool_type_title: '🛠️ סוג הכלי', tool_quiz: 'בוחן', tool_task: 'משימה', tool_worksheet: 'דף עבודה', tool_exam: 'מבחן',
+    mode_title: 'בחרו מה ברצונכם לעשות:',
+    mode_build: 'בניית כלי חדש', mode_build_desc: 'יצירת כלי הערכה מובנה מאפס לפי הגדרות מותאמות',
+    mode_improve: 'שיפור כלי קיים', mode_improve_desc: 'הערכה ושיפור כלי מוכן לפי הקריטריונים הנדרשים',
+    panel_details: '📋 פרטי הכלי', grade_label: 'כיתה', level_label: 'רמה / מסלול',
+    duration_label: 'משך', total_label: 'ניקוד כולל', minutes: 'דקות',
+    unit_label: 'יחידה / נושא כללי', unit_placeholder: 'לדוגמה: כוחות ויחסי גומלין',
+    exam_title_label: 'כותרת הכלי', optional: '(אופציונלי)', optional_short: '(אופציונלי)',
+    exam_title_placeholder: 'לדוגמה: מבחן סוף יחידה',
+    topics_header: '📚 נושאים ומיומנויות נדרשים',
+    topics_hint: '💡 זה המידע החשוב ביותר: כתבו כל נושא בשורה, יחד עם החוק, המושגים או המיומנות כפי שנלמדו בכיתה.',
+    topics_label: 'הנושאים הנדרשים', excluded_label: 'מה לא נלמד / לא נדרש',
+    excluded_placeholder: 'לדוגמה: נוסחת האנרגיה הקינטית לא נלמדה',
+    attach_header: '📎 קבצים שתצרפו לפקודה',
+    attach_hint: '💡 צלמו את הלוח ואת דפי הספר בתאורה טובה ומלפנים, וצרפו רק מה ששייך לנושאי הכלי.',
+    panel_structure: '📊 מבנה הכלי וחלוקת ניקוד',
+    struct_std: 'המבנה המאושר (15 שאלות)', struct_std_desc: 'שני חלקים: 60 ידע, הבנה ויישום + 40 ניתוח והסקה, לפי טקסונומיית בלום',
+    struct_custom: 'מבנה מותאם', struct_custom_desc: 'הגדירו בעצמכם חלקים, שאלות וניקוד',
+    sections_label: 'חלקי הכלי – נושא, שאלות וניקוד', add_section: '+ הוספת חלק',
+    sec_topic_ph: 'סוג החלק או הנושא...', sec_q_ph: 'שאלות', sec_pts_ph: 'ניקוד',
+    total_q: 'סה"כ שאלות:', total_pts: 'סה"כ ניקוד:',
+    sci_text_label: '📄 טקסט מדעי (קריאה, הבנה וניתוח)', add_sci_text: '+ הוספת טקסט מדעי',
+    sci_text_hint: '💡 מיומנות נפוצה מאוד בביולוגיה ובמדעים. הדביקו טקסט משלכם, או השאירו ריק כדי שייכתב טקסט חדש לפי הנושאים בלבד.',
+    st_title: '📄 טקסט מדעי', st_topic: 'נושא', st_words: 'מספר מילים', st_q: 'שאלות', st_pts: 'ניקוד',
+    st_extra: 'כולל', st_text: 'הטקסט (אופציונלי)', st_text_ph: 'הדביקו כאן את הטקסט...',
+    st_none: 'ללא תוספות', st_table: 'טבלת נתונים', st_graph: 'גרף', st_exp: 'תיאור ניסוי',
+    conv_header: '⚙️ מוסכמות הכיתה ומה מותר', conv_placeholder: 'מוסכמות נוספות...',
+    qtypes_header: '✏️ סוגי שאלות מועדפים', comp_header: '🧩 מרכיבי הכלי ומדדי איכות',
+    notes_header: '📝 הערות נוספות', notes_placeholder: 'לדוגמה: התבססו על שאלות הספר המצורפות...',
+    generate_btn: '✨ צרו פקודה חכמה ←',
+    improve_header: '🔍 שיפור כלי קיים', improve_desc: 'פקודה זו תאפשר לבינה המלאכותית לשפר את הכלי המצורף תוך שמירה על השינויים שלכם.',
+    improve_subject_label: 'מקצוע הכלי המצורף', improve_grade_label: 'כיתה ורמה',
+    improve_check_label: 'מה תרצו לשפר?', improve_notes_label: 'בקשות שיפור ספציפיות',
+    improve_notes_placeholder: 'לדוגמה: הוסיפו חומר חדש, צרו איור לשאלה 14...',
+    improve_btn: '✨ צרו פקודה לשיפור ←',
+    result_ready: '✅ הפקודה מוכנה! העתיקו אותה ל-Claude או ChatGPT', copy_btn: '📋 העתיקו את הפקודה', copy_success: '✅ הועתק!',
+    reminder: '📎 אל תשכחו לצרף לפקודה: ', reminder_improve: '📎 אל תשכחו לצרף את הגרסה האחרונה של הכלי (קובץ Word).',
+    need_topics: 'נא לכתוב קודם את הנושאים הנדרשים.',
+    greeting: (n) => `ברוכים הבאים, <span>${n}</span>! 👋 מה תרצו לעשות היום?`,
+    footer: 'הבזקים חכמים · גרסת מדעים ומתמטיקה',
+    topics_placeholder: '',
+    std_cols: ['שאלה', 'סוג', 'בלום', 'ניקוד'],
+  },
+  en: {
+    ui_lang: 'Interface language:',
+    badge: '✨ Science & Math · Smart Assessment Tool Builder',
+    brand: 'Smart Flashes', tagline: 'with Mona Mustafa',
+    subtitle: 'Smart Platform for Building Science & Math Assessments',
+    counselor_name: 'Mona Mustafa', counselor_role: 'Assessment & Evaluation Coordinator',
+    quote: 'Dear colleagues, I am delighted to accompany you in raising the quality of our students\' assessment and supporting their learning journey with professionalism and love.',
+    welcome_title: '🎉 Welcome to the Platform', welcome_desc: 'Enter your name to personalize your experience',
+    teacher_placeholder: 'Teacher name...', start_btn: 'Start →',
+    subject_title: '🔬 Subject', exam_lang_title: '📚 Assessment Language',
+    ar_lang: 'Arabic', he_lang: 'Hebrew', en_lang: 'English',
+    tool_type_title: '🛠️ Tool Type', tool_quiz: 'Short Quiz', tool_task: 'Task', tool_worksheet: 'Worksheet', tool_exam: 'Exam',
+    mode_title: 'Choose what you want to do:',
+    mode_build: 'Build New Tool', mode_build_desc: 'Create a structured assessment from scratch with custom settings',
+    mode_improve: 'Improve Existing Tool', mode_improve_desc: 'Evaluate and improve a ready assessment to meet required standards',
+    panel_details: '📋 Tool Details', grade_label: 'Grade', level_label: 'Level / Track',
+    duration_label: 'Duration', total_label: 'Total points', minutes: 'minutes',
+    unit_label: 'Unit / general topic', unit_placeholder: 'e.g. Forces and interactions',
+    exam_title_label: 'Tool Title', optional: '(Optional)', optional_short: '(Optional)',
+    exam_title_placeholder: 'e.g. End of unit exam',
+    topics_header: '📚 Required Topics & Skills',
+    topics_hint: '💡 The most important input: one topic per line, with the law, terms or skill as taught in class.',
+    topics_label: 'Required topics', excluded_label: 'Not taught / not required',
+    excluded_placeholder: 'e.g. The kinetic energy formula was not taught',
+    attach_header: '📎 Files you will attach',
+    attach_hint: '💡 Photograph the board and book pages in good light, and attach only what belongs to the tool topics.',
+    panel_structure: '📊 Tool Structure & Point Distribution',
+    struct_std: 'Standard structure (15 questions)', struct_std_desc: 'Two parts: 60 knowledge/understanding/application + 40 analysis/inference, by Bloom\'s taxonomy',
+    struct_custom: 'Custom structure', struct_custom_desc: 'Define your own sections, questions and points',
+    sections_label: 'Sections – Topic, Questions & Points', add_section: '+ Add Section',
+    sec_topic_ph: 'Section type or topic...', sec_q_ph: 'Questions', sec_pts_ph: 'Points',
+    total_q: 'Total Questions:', total_pts: 'Total Points:',
+    sci_text_label: '📄 Scientific text (reading & analysis)', add_sci_text: '+ Add scientific text',
+    sci_text_hint: '💡 A very common skill in biology and science. Paste your own text, or leave it empty to have a new text written on the required topics only.',
+    st_title: '📄 Scientific text', st_topic: 'Topic', st_words: 'Words', st_q: 'Questions', st_pts: 'Points',
+    st_extra: 'Includes', st_text: 'Text (optional)', st_text_ph: 'Paste the text here...',
+    st_none: 'Nothing extra', st_table: 'Data table', st_graph: 'Graph', st_exp: 'Experiment description',
+    conv_header: '⚙️ Class conventions & allowed tools', conv_placeholder: 'Other conventions...',
+    qtypes_header: '✏️ Preferred Question Types', comp_header: '🧩 Tool Components & Quality Criteria',
+    notes_header: '📝 Additional Notes', notes_placeholder: 'e.g. Base questions on the attached book exercises...',
+    generate_btn: '✨ Generate Smart Prompt →',
+    improve_header: '🔍 Improve Existing Tool', improve_desc: 'This prompt lets the AI improve the attached tool while keeping your own edits.',
+    improve_subject_label: 'Subject of Attached Tool', improve_grade_label: 'Grade & Level',
+    improve_check_label: 'What would you like to improve?', improve_notes_label: 'Specific Improvement Requests',
+    improve_notes_placeholder: 'e.g. Add new material, create a figure for question 14...',
+    improve_btn: '✨ Generate Improvement Prompt →',
+    result_ready: '✅ Prompt ready! Copy and paste it into Claude or ChatGPT', copy_btn: '📋 Copy Prompt', copy_success: '✅ Copied!',
+    reminder: '📎 Remember to attach: ', reminder_improve: '📎 Remember to attach the latest version of the tool (Word file).',
+    need_topics: 'Please enter the required topics first.',
+    greeting: (n) => `Welcome, <span>${n}</span>! 👋 What would you like to do today?`,
+    footer: 'Smart Flashes · Science & Math edition',
+    topics_placeholder: '',
+    std_cols: ['Q', 'Type', 'Bloom', 'Points'],
+  },
+};
+
+// ══════════════════════════════════════════
+//  DATA (labels: [ar, he, en] — the prompt always uses Arabic)
+// ══════════════════════════════════════════
+const L3 = (o) => o[uiLang === 'ar' ? 0 : uiLang === 'he' ? 1 : 2];
+
+const SUBJECTS = {
+  physics:   { icon: '⚛️', name: ['فيزياء', 'פיזיקה', 'Physics'],
+    topicsPh: 'مثال:\n1. محصلة القوى: ΣF مجموع القوى مع الإشارة (+/−)\n2. قانون نيوتن الثاني: a = ΣF / m\n3. قانون الحركة: V = V₀ + a·t' },
+  chemistry: { icon: '🧪', name: ['كيمياء', 'כימיה', 'Chemistry'],
+    topicsPh: 'مثال:\n1. التغيّرات الفيزيائية والكيميائية\n2. كتابة المعادلات الكيميائية ووزنها\n3. الأحماض والقواعد: الكاشف ودرجة الحموضة pH' },
+  biology:   { icon: '🧬', name: ['أحياء', 'ביולוגיה', 'Biology'],
+    topicsPh: 'مثال:\n1. مبنى الخلية: الغشاء، النواة، السيتوبلازما\n2. الفرق بين الخلية النباتية والحيوانية\n3. مهارة: قراءة نص علمي وتحديد متغيرات تجربة' },
+  general:   { icon: '🔭', name: ['علوم عامة', 'מדע וטכנולוגיה', 'General Science'],
+    topicsPh: 'مثال:\n1. الكتلة والحجم: وحدات القياس وتحويلها\n2. الكثافة: ρ = m / V\n3. الصفة الفاصلة بين المواد' },
+  math:      { icon: '📐', name: ['رياضيات', 'מתמטיקה', 'Mathematics'],
+    topicsPh: 'مثال:\n1. حل معادلات من الدرجة الأولى\n2. مسائل كلامية بالمعادلات\n3. الدالة الخطية: الميل ونقطة التقاطع مع المحور y' },
+};
+
+const GRADES = [
+  ['الصف السابع', 'כיתה ז\'', 'Grade 7'], ['الصف الثامن', 'כיתה ח\'', 'Grade 8'], ['الصف التاسع', 'כיתה ט\'', 'Grade 9'],
+  ['الصف العاشر', 'כיתה י\'', 'Grade 10'], ['الصف الحادي عشر', 'כיתה י"א', 'Grade 11'], ['الصف الثاني عشر', 'כיתה י"ב', 'Grade 12'],
+];
+const LEVELS = [
+  { g: ['المرحلة المتوسطة', 'חטיבת ביניים', 'Middle School'], o: [['مستوى عام', 'רמה כללית', 'General level'], ['مستوى متقدم', 'רמה מתקדמת', 'Advanced level'], ['مستوى داعم', 'רמה תומכת', 'Support level']] },
+  { g: ['مسارات', 'מסלולים', 'Tracks'], o: [['مسار أساسي', 'מסלול בסיסי', 'Basic track'], ['مسار موسّع', 'מסלול מורחב', 'Extended track']] },
+  { g: ['وحدات دراسية (بجروت)', 'יחידות לימוד (בגרות)', 'Study Units (Bagrut)'], o: [['3 وحدات', '3 יח"ל', '3 units'], ['4 وحدات', '4 יח"ל', '4 units'], ['5 وحدات', '5 יח"ל', '5 units']] },
+];
+const DURATIONS = [45, 60, 90, 120, 180];
+
+const ATTACH = [
+  { id: 'board', on: true,  l: ['صور اللوح من الحصص', 'צילומי הלוח מהשיעורים', 'Photos of the board from lessons'],
+    p: 'صور اللوح من الحصص: مصدر المحتوى والرموز وطريقة الحل أو الشرح' },
+  { id: 'bookq', on: true,  l: ['صور أسئلة وتمارين الكتاب التي حُلّت', 'צילומי שאלות ותרגילים מהספר', 'Photos of solved book exercises'],
+    p: 'صور أسئلة وتمارين الكتاب التي حُلّت في الصف: مصدر نمط الأسئلة وصياغتها' },
+  { id: 'bookf', on: false, l: ['رسومات ومخططات من الكتاب', 'איורים ותרשימים מהספר', 'Figures & diagrams from the book'],
+    p: 'رسومات ومخططات من الكتاب: استعملها في الأسئلة بدل رسم رسومات مفصّلة جديدة' },
+  { id: 'ppt',   on: false, l: ['عرض تقديمي أو ملخص', 'מצגת או סיכום', 'Presentation or summary'],
+    p: 'عرض تقديمي أو ملخص: استعمل منه فقط الأجزاء المتعلقة بالمواضيع المطلوبة' },
+  { id: 'lab',   on: false, l: ['ورقة عمل أو تجربة', 'דף עבודה או ניסוי', 'Worksheet or experiment'],
+    p: 'ورقة عمل أو تجربة من الصف' },
+  { id: 'hdr',   on: true,  l: ['صورة ترويسة المدرسة', 'תמונת כותרת בית הספר', 'School letterhead image'],
+    p: 'صورة ترويسة المدرسة: تُوضع كما هي في أعلى الأداة والمفتاح' },
+];
+
+const CONV = {
+  common: [
+    { id: 'calc', l: ['يُسمح باستعمال آلة حاسبة بسيطة', 'מותר להשתמש במחשבון פשוט', 'Simple calculator allowed'] },
+    { id: 'nocalc', l: ['بدون آلة حاسبة', 'ללא מחשבון', 'No calculator'] },
+  ],
+  physics: [
+    { id: 'g10', on: true, l: ['g = 10[m/sec²]', 'g = 10[m/sec²]', 'g = 10[m/sec²]'], p: 'تسارع الجاذبية g = 10[m/sec²]' },
+    { id: 'brk', on: true, l: ['الوحدات بين أقواس مربعة مثل 5[m]', 'יחידות בסוגריים מרובעים, למשל 5[m]', 'Units in square brackets, e.g. 5[m]'], p: 'الوحدات بين أقواس مربعة مثل 5[m] و20[J]' },
+    { id: 'rpos', l: ['الاتجاه نحو اليمين موجب (+)', 'כיוון ימינה חיובי (+)', 'Rightward direction is positive (+)'], p: 'الاتجاه نحو اليمين موجب (+) ونحو اليسار سالب (−)' },
+    { id: 'nofr', l: ['إهمال الاحتكاك ومقاومة الهواء', 'הזנחת חיכוך והתנגדות אוויר', 'Neglect friction and air resistance'], p: 'إهمال الاحتكاك ومقاومة الهواء (لا يوجد "ضياع" للطاقة) ما لم يُذكر غير ذلك' },
+  ],
+  chemistry: [
+    { id: 'ptable', on: true, l: ['يُسمح باستعمال الجدول الدوري', 'מותר להשתמש בטבלה המחזורית', 'Periodic table allowed'], p: 'يُسمح باستعمال الجدول الدوري (يُرفق في نهاية الأداة)' },
+    { id: 'states', l: ['حالات المادة (s, l, g, aq) في المعادلات', 'מצבי צבירה (s, l, g, aq) בניסוחים', 'State symbols (s, l, g, aq)'], p: 'كتابة حالات المادة (s, l, g, aq) في المعادلات' },
+    { id: 'safety', on: true, l: ['ذكر قواعد الأمان في التجارب', 'כללי בטיחות בניסויים', 'Lab safety rules in experiments'], p: 'ذكر قواعد الأمان المناسبة عند وصف التجارب' },
+  ],
+  biology: [
+    { id: 'enterm', l: ['المصطلح بالإنجليزية بين قوسين', 'המונח באנגלית בסוגריים', 'English term in parentheses'], p: 'كتابة المصطلح العلمي بالإنجليزية بين قوسين بجانب العربي' },
+    { id: 'bookfig', on: true, l: ['استعمال رسومات الكتاب بدل رسومات تشريحية جديدة', 'שימוש באיורי הספר', 'Use book figures instead of new anatomical drawings'], p: 'لا ترسم رسومات تشريحية مفصّلة؛ استعمل رسومات الكتاب المرفقة أو مخططات بسيطة' },
+  ],
+  math: [
+    { id: 'frac', l: ['النتائج بكسور عادية', 'תוצאות בשברים פשוטים', 'Results as common fractions'], p: 'كتابة النتائج بكسور عادية مختصرة (لا عشرية) ما لم يُطلب غير ذلك' },
+    { id: 'dec2', l: ['التقريب إلى منزلتين عشريتين', 'עיגול לשתי ספרות אחרי הנקודה', 'Round to 2 decimal places'], p: 'تقريب النتائج العشرية إلى منزلتين' },
+    { id: 'scale', on: true, l: ['الأشكال: «الرسم ليس بمقياس رسم»', 'הסרטוט אינו בקנה מידה', '"Figure not drawn to scale"'], p: 'تحت الأشكال الهندسية: «الرسم ليس بمقياس رسم»' },
+    { id: 'alt', on: true, l: ['قبول طرق حل بديلة صحيحة', 'קבלת דרכי פתרון חלופיות', 'Accept alternative correct methods'], p: 'قبول طرق حل بديلة صحيحة في المفتاح' },
+  ],
+};
+
+const QT_COMMON = [
+  { id: 'tf', on: true, l: ['صح/خطأ مفاهيمي (بدون حسابات)', 'נכון/לא נכון מושגי', 'Conceptual True/False'] },
+  { id: 'fill', on: true, l: ['أكمل الفراغ', 'השלמת חסר', 'Fill in the blank'] },
+  { id: 'mcq', on: true, l: ['اختيار من متعدد', 'בחירה מרובה', 'Multiple choice'] },
+  { id: 'short', on: true, l: ['أسئلة قصيرة: عرّف، علّل، اشرح', 'שאלות קצרות: הגדר, נמק, הסבר', 'Short answers: define, justify, explain'] },
+  { id: 'apply', on: true, l: ['تطبيق مباشر (مسائل/تمارين)', 'יישום ישיר (בעיות/תרגילים)', 'Direct application'] },
+  { id: 'life', on: true, l: ['موقف حياتي بخطوات متسلسلة', 'מצב מחיי היומיום', 'Real-life multi-step situation'] },
+  { id: 'classify', on: true, l: ['تصنيف بجدول (دائرة أو ✓)', 'מיון בטבלה', 'Classification table'] },
+  { id: 'analyze', on: true, l: ['تحليل رسم أو جدول أو رسم بياني', 'ניתוח איור, טבלה או גרף', 'Analysis of figure/table/graph'] },
+  { id: 'infer', on: true, l: ['استنتاج من تجربة أو معطيات', 'הסקה מניסוי או נתונים', 'Inference from experiment/data'] },
+  { id: 'claim', on: true, l: ['تقييم ادعاء لشخص («قال أحمد...»)', 'הערכת טענה', 'Evaluating a claim'] },
+];
+const QT_SUBJ = {
+  physics: [{ id: 'graph', l: ['قراءة رسم بياني', 'קריאת גרף', 'Reading a graph'] }, { id: 'forces', l: ['رسم أسهم القوى', 'שרטוט חיצי כוח', 'Drawing force arrows'] }],
+  chemistry: [{ id: 'balance', l: ['وزن معادلات', 'איזון ניסוחים', 'Balancing equations'] }, { id: 'particles', l: ['نموذج الجسيمات', 'מודל החלקיקים', 'Particle model'] }, { id: 'exp', l: ['وصف تجربة وتفسير مشاهدات', 'תיאור ניסוי והסבר תצפיות', 'Experiment & observations'] }],
+  biology: [{ id: 'sci', on: true, l: ['قراءة نص علمي', 'קריאת טקסט מדעי', 'Reading a scientific text'] }, { id: 'label', l: ['سمِّ الأجزاء المشار إليها بالأرقام', 'זיהוי חלקים ממוספרים', 'Label numbered parts'] }, { id: 'design', l: ['تصميم تجربة (فرضية، متغيرات، مجموعة مراقبة)', 'תכנון ניסוי', 'Experiment design'] }],
+  general: [{ id: 'sci', l: ['قراءة نص علمي', 'קריאת טקסט מדעי', 'Reading a scientific text'] }, { id: 'graph', l: ['قراءة رسم بياني', 'קריאת גרף', 'Reading a graph'] }, { id: 'exp', l: ['وصف تجربة وتفسير مشاهدات', 'תיאור ניסוי והסבר תצפיות', 'Experiment & observations'] }],
+  math: [{ id: 'error', on: true, l: ['اكتشف الخطأ في حل طالب', 'מצא את הטעות', 'Find the error'] }, { id: 'word', on: true, l: ['مسألة كلامية', 'בעיה מילולית', 'Word problem'] }, { id: 'pattern', l: ['نمط وتعميم بقاعدة', 'דפוס והכללה', 'Pattern & generalization'] }, { id: 'proof', l: ['تعليل/برهان قصير', 'נימוק/הוכחה קצרה', 'Short justification/proof'] }],
+};
+
+const COMP = [
+  { id: 'key', on: true, l: ['مفتاح إجابات مفصّل مع توزيع العلامات', 'מחוון מפורט עם חלוקת ניקוד', 'Detailed answer key with point breakdown'] },
+  { id: 'spec', on: true, l: ['جدول مواصفات وتوزيع بلوم', 'טבלת מפרט והתפלגות בלום', 'Specification table & Bloom distribution'] },
+  { id: 'figs', on: true, l: ['رسومات توضيحية لا تكشف الإجابة', 'איורים שאינם חושפים תשובה', 'Figures that don\'t reveal answers'] },
+  { id: 'easy', on: true, l: ['سهولة التصحيح (80% إجابات قصيرة)', 'קלות בדיקה', 'Easy grading (80% short answers)'] },
+  { id: 'onepage', on: true, l: ['كل سؤال كامل في صفحة واحدة', 'כל שאלה בעמוד אחד', 'Each question on one page'] },
+  { id: 'noreveal', on: true, l: ['لا يكشف سؤال إجابة سؤال آخر', 'שאלה לא חושפת תשובה של אחרת', 'No question reveals another'] },
+  { id: 'modelB', l: ['نموذج ب مكافئ', 'נוסח ב\' מקביל', 'Equivalent version B'] },
+  { id: 'answerSheet', l: ['ورقة إجابة منفصلة للجزء الموضوعي', 'דף תשובות נפרד', 'Separate answer sheet'] },
+];
+
+const IMPROVE = [
+  { id: 'onlyatt', l: ['الاعتماد فقط على المواد المرفقة الآن', 'הסתמכות רק על החומרים המצורפים', 'Rely only on the attached materials'], p: 'اعتمد فقط على المواد المرفقة الآن، واحذف أو استبدل كل سؤال عن موضوع غير موجود فيها.' },
+  { id: 'book', l: ['مطابقة نمط أسئلة الكتاب المرفقة', 'התאמה לסגנון שאלות הספר', 'Match the attached book style'], p: 'عدّل صياغة الأسئلة والوحدات والرموز لتطابق نمط أسئلة الكتاب المرفقة، بأعداد ومواقف جديدة.' },
+  { id: 'bloom', l: ['ضبط التدرّج وتوزيع بلوم (60/40)', 'התאמת המדרג והתפלגות בלום', 'Fix difficulty order & Bloom (60/40)'], p: 'رتّب الأسئلة من الأسهل إلى الأصعب، واضبط توزيع بلوم والنسبة 60/40 والمجموع.' },
+  { id: 'tf', l: ['صح/خطأ مفاهيمي بدل الحسابي', 'נכון/לא נכון מושגי', 'Conceptual True/False'], p: 'حوّل عبارات صح/خطأ إلى ادعاءات مفاهيمية عن المصطلحات وفهم القوانين (بدون حسابات)، 4 صحيحة و4 خاطئة.' },
+  { id: 'easy', l: ['تسهيل التصحيح', 'הקלת הבדיקה', 'Make grading easier'], p: 'سهّل التصحيح: جداول، دوائر، ✓، مربعات للنتائج، وتقليل الكتابة الحرّة دون إضعاف مستوى الأسئلة.' },
+  { id: 'reveal', l: ['إزالة الأسئلة التي تكشف إجابات غيرها', 'הסרת שאלות שחושפות תשובות', 'Remove answer-revealing items'], p: 'افحص وأزل أي عبارة أو سؤال يكشف إجابة سؤال آخر.' },
+  { id: 'rtl', l: ['إصلاح اتجاه النص والصيغ', 'תיקון כיווניות טקסט ונוסחאות', 'Fix text & formula direction'], p: 'أصلح اتجاه النص والصيغ والوحدات اللاتينية داخل الجمل (علامات LRM/RLM) حتى تظهر بالترتيب الصحيح.' },
+  { id: 'pages', l: ['كل سؤال في صفحة وحذف الصفحات الفارغة', 'כל שאלה בעמוד, מחיקת עמודים ריקים', 'One question per page, no blank pages'], p: 'احذف الصفحات الفارغة وفواصل الصفحات اليدوية، واجعل كل سؤال كاملًا في صفحة واحدة مع الحفاظ على الترتيب.' },
+  { id: 'figs', l: ['إضافة رسومات توضيحية', 'הוספת איורים', 'Add illustrations'], p: 'أضف رسومات توضيحية أصلية حيث تساعد، دون أن تكشف الإجابة.' },
+  { id: 'key', l: ['تحديث مفتاح الإجابات ليطابق الأداة', 'עדכון המחוון', 'Update the answer key'], p: 'حدّث مفتاح الإجابات وجدول المواصفات ليطابقا الأداة المعدّلة بندًا بندًا.' },
+];
+
+// ══════════════════════════════════════════
+//  PROMPT TEXT BLOCKS (Arabic)
+// ══════════════════════════════════════════
+const STD_ROWS = [
+  ['sec', ['القسم الأول: المعرفة والفهم والتطبيق (60 علامة)', 'חלק א\': ידע, הבנה ויישום (60)', 'Part 1: Knowledge, understanding & application (60)']],
+  ['1', ['صح/خطأ: 8 عبارات (4 صحيحة و4 خاطئة)', 'נכון/לא נכון: 8 היגדים', 'True/False: 8 statements'], ['تذكّر', 'זכירה', 'Remember'], '8'],
+  ['2', ['أكمل الفراغ: 6 بنود', 'השלמת חסר: 6 פריטים', 'Fill in: 6 items'], ['تذكّر', 'זכירה', 'Remember'], '6'],
+  ['3–8', ['اختيار من متعدد، 3 علامات لكل سؤال', 'בחירה מרובה, 3 נק\' לשאלה', 'Multiple choice, 3 pts each'], ['تذكّر وفهم', 'זכירה והבנה', 'Remember & understand'], '18'],
+  ['9', ['3 أسئلة قصيرة × 4 علامات', '3 שאלות קצרות × 4', '3 short questions × 4'], ['فهم', 'הבנה', 'Understand'], '12'],
+  ['10', ['تطبيق مباشر: 3–4 بنود', 'יישום ישיר: 3–4 סעיפים', 'Direct application: 3–4 items'], ['تطبيق', 'יישום', 'Apply'], '16'],
+  ['sec', ['القسم الثاني: التطبيق والتحليل والاستنتاج (40 علامة)', 'חלק ב\': יישום, ניתוח והסקה (40)', 'Part 2: Application, analysis & inference (40)']],
+  ['11', ['موقف حياتي جديد بخطوات متسلسلة', 'מצב חדש מחיי היומיום', 'New real-life situation'], ['تطبيق', 'יישום', 'Apply'], '8'],
+  ['12', ['تصنيف أو مقارنة 8 حالات', 'מיון או השוואה של 8 מקרים', 'Classify/compare 8 cases'], ['تحليل', 'ניתוח', 'Analyze'], '8'],
+  ['13', ['تحليل نص علمي أو رسم أو جدول', 'ניתוח טקסט, איור או טבלה', 'Analyze text/figure/table'], ['تحليل', 'ניתוח', 'Analyze'], '8'],
+  ['14', ['استنتاج علاقة أو نتيجة من معطيات', 'הסקת קשר מנתונים', 'Infer a relation from data'], ['استنتاج', 'הסקה', 'Infer'], '8'],
+  ['15', ['تقييم ادعاء أو حلّ لطالب + تبرير + اقتراح', 'הערכת טענה + נימוק + הצעה', 'Evaluate a claim + justify + suggest'], ['استنتاج وتقييم', 'הסקה והערכה', 'Infer & evaluate'], '8'],
+];
+
+const STD_PROMPT = `### القسم الأول: المعرفة والفهم والتطبيق (60 علامة)
+| السؤال | النوع | بلوم | العلامة |
+|---|---|---|---|
+| 1 | صح/خطأ: 8 عبارات (4 صحيحة و4 خاطئة) | تذكّر | 8 |
+| 2 | أكمل الفراغ: 6 بنود (مصطلحات، رموز، تعريفات قصيرة) | تذكّر | 6 |
+| 3–8 | اختيار من متعدد، 4 بدائل، 3 علامات لكل سؤال | تذكّر (2) وفهم (4) | 18 |
+| 9 | 3 أسئلة قصيرة × 4 علامات: عرّف، علّل، اشرح بكلماتك | فهم | 12 |
+| 10 | تطبيق مباشر: 3–4 بنود (مسائل، تمارين، معادلات، تطبيق مفهوم على مثال جديد) | تطبيق | 16 |
+
+### القسم الثاني: التطبيق والتحليل والاستنتاج (40 علامة)
+| السؤال | النوع | بلوم | العلامة |
+|---|---|---|---|
+| 11 | موقف حياتي جديد بخطوات متسلسلة | تطبيق | 8 |
+| 12 | تصنيف أو مقارنة 8 حالات (دائرة أو ✓ في جدول، علامة لكل حالة) | تحليل | 8 |
+| 13 | تحليل نص علمي أو رسم أو جدول أو رسم بياني | تحليل | 8 |
+| 14 | استنتاج علاقة أو نتيجة من معطيات أو تجربة | استنتاج | 8 |
+| 15 | تقييم ادعاء أو حلّ لطالب ("قال أحمد...") + تبرير + اقتراح | استنتاج وتقييم | 8 |
+
+توزيع بلوم المطلوب: تذكّر 20%، فهم 24%، تطبيق 24%، تحليل 16%، استنتاج 8%، استنتاج وتقييم 8%.`;
+
+const MODULES = {
+  physics: `### ملحق الفيزياء
+- الوحدات والرموز كما في الصف، والقيم الثابتة تُكتب في التعليمات.
+- الحل الحسابي بخطوات الصف: تسجيل المعطيات ← القانون ← التعويض ← الجواب النهائي مع الوحدة (والاتجاه للقوى).
+- تحويل الوحدات جزء من الحل (cm←m، gr←kg، min←sec)، والنتائج "نظيفة" قدر الإمكان.
+- التطبيق المباشر: مسائل حسابية. الموقف الحياتي: مسألة بخطوات متسلسلة مثل مسائل الكتاب.
+- التحليل: رسم بياني أو أسهم قوى أو جدول قياسات. الاستنتاج: نتائج تجربة يُستنتج منها قانون أو علاقة.
+- الرسومات: أسهم القوى، نوابض، ميزان، رسوم بيانية دقيقة بمحاور وأرقام.`,
+  chemistry: `### ملحق الكيمياء
+- الرموز والصيغ الكيميائية مكتوبة بشكل صحيح (H₂O، CO₂، Na⁺)، والمعادلات موزونة.
+- التطبيق المباشر: وزن معادلات، كتابة صيغ، أو حسابات بسيطة حسب المادة (كثافة، تركيز، كتلة...).
+- التصنيف: مواد أو تغيّرات (فيزيائي/كيميائي، عنصر/مركّب/مخلوط، حمضي/قاعدي...).
+- التحليل: جدول خصائص أو نتائج تجربة، أو رسم لنموذج الجسيمات.
+- الاستنتاج: تجربة موصوفة يستنتج منها الطالب نتيجة أو يفسّر مشاهدة.
+- التقييم: تفسير طالب لتجربة، أو اقتراح طريقة لفصل أو تمييز مواد مع تعليل.
+- عند وصف تجربة: أدوات آمنة وقواعد أمان مناسبة للصف.`,
+  biology: `### ملحق الأحياء – مع مهارة قراءة نص علمي
+- المصطلحات العلمية بالعربية كما في الكتاب.
+- بلوك "نص علمي" (في المبنى المعتمد يحلّ محل السؤالين 13 و14، 16 علامة):
+  • نص من 250–400 كلمة، جديد وغير مألوف للطلاب، لكنه مبني على المواضيع المطلوبة فقط، بأسطر مرقّمة (كل 5 أسطر).
+  • إن أرفق المعلم نصًا، استعمله كما هو مع تعديلات لغوية بسيطة فقط، واذكر المصدر.
+  • أسئلة متدرّجة (6–8 بنود): استخراج معلومة (مع رقم السطر)، شرح مصطلح من السياق، الفكرة المركزية، ربط بمفهوم متعلَّم، قراءة جدول/رسم في النص، في التجربة الموصوفة: سؤال البحث والفرضية والمتغيّر المستقل والتابع ومجموعة المقارنة، ثم استنتاج أو توقّع.
+- التطبيق المباشر: تطبيق مفهوم على كائن حي أو حالة جديدة غير مذكورة في الكتاب.
+- التصنيف: كائنات أو أعضاء أو عمليات حسب صفة مشتركة.
+- التقييم: ادعاء أو استنتاج من تجربة، أو اقتراح تجربة بسيطة لفحص فرضية.
+- الرسومات: لا رسومات تشريحية مفصّلة؛ استعمل رسومات الكتاب المرفقة أو مخططًا تخطيطيًا بسيطًا. أسئلة "سمِّ الأجزاء المشار إليها بالأرقام" مناسبة وسريعة التصحيح.`,
+  math: `### ملحق الرياضيات
+- التعابير والمعادلات تُكتب من اليسار إلى اليمين بشكل واضح داخل النص العربي، والكسور والأسس والجذور تظهر بشكل صحيح.
+- صح/خطأ: عن تعريفات وخصائص وقواعد، وليس عن نتائج حسابية طويلة.
+- الأسئلة القصيرة: علّل / اشرح لماذا / برهن بخطوة أو خطوتين.
+- التطبيق المباشر: تمارين متدرّجة الصعوبة. الموقف الحياتي: مسألة كلامية بخطوات متسلسلة.
+- التصنيف: أعداد أو أشكال أو تعابير أو دوال حسب خاصية.
+- التحليل: رسم بياني أو جدول أو شكل هندسي بقياسات معطاة. الاستنتاج: نمط أو تسلسل يُكمَل ويُعمَّم بقاعدة.
+- التقييم: "اكتشف الخطأ": حل طالب فيه خطأ واحد؛ يحدّد الطالب الخطأ ويشرح سببه ويكتب الحل الصحيح.
+- المفتاح: الحل الكامل بالخطوات، وعلامات جزئية لكل خطوة، وقبول طرق حل بديلة صحيحة.
+- الأشكال الهندسية واضحة مع القياسات المعطاة.`,
+};
+MODULES.general = `### ملحق العلوم العامة
+طبّق على كل موضوع ما يناسبه من الملاحق التالية:\n\n` + MODULES.physics + '\n\n' + MODULES.chemistry + '\n\n' + MODULES.biology;
+
+const TOOL_NAMES = { quiz: 'اختبار قصير', task: 'مهمة', worksheet: 'ورقة عمل', exam: 'امتحان' };
+const TOOL_ACC = { quiz: 'اختبارًا قصيرًا', task: 'مهمة تقييمية', worksheet: 'ورقة عمل', exam: 'امتحانًا' };
+const SUBJ_DEF = { physics: 'الفيزياء', chemistry: 'الكيمياء', biology: 'الأحياء', general: 'العلوم العامة', math: 'الرياضيات' };
+const LANG_SPEC = {
+  ar: { name: 'العربية', fmt: 'الصفحة من اليمين إلى اليسار (RTL)، خط Arial، حجم 14.' },
+  he: { name: 'العبرية', fmt: 'اكتب نص الأداة والمفتاح باللغة العبرية. الصفحة من اليمين إلى اليسار (RTL)، خط David أو Arial، حجم 14.' },
+  en: { name: 'الإنجليزية', fmt: 'اكتب نص الأداة والمفتاح باللغة الإنجليزية. الصفحة من اليسار إلى اليمين (LTR)، خط Arial، حجم 12.' },
+};
+
+// ══════════════════════════════════════════
+//  UI
+// ══════════════════════════════════════════
+function setUILang(lang, btn) {
+  uiLang = lang;
+  document.querySelectorAll('.lang-btn').forEach((b) => b.classList.toggle('active', b === btn || (!btn && b.getAttribute('onclick').includes("'" + lang + "'"))));
+  const ltr = lang === 'en';
+  document.body.classList.toggle('ltr', ltr);
+  document.documentElement.setAttribute('dir', ltr ? 'ltr' : 'rtl');
+  document.documentElement.setAttribute('lang', lang);
+  document.body.style.direction = ltr ? 'ltr' : 'rtl';
+  const t = T[lang];
+  document.querySelectorAll('[data-t]').forEach((el) => { const v = t[el.getAttribute('data-t')]; if (typeof v === 'string') el.textContent = v; });
+  document.querySelectorAll('[data-placeholder-t]').forEach((el) => { const v = t[el.getAttribute('data-placeholder-t')]; if (typeof v === 'string' && v) el.placeholder = v; });
+  document.getElementById('result-ready').textContent = t.result_ready;
+  document.querySelector('.copy-btn').textContent = t.copy_btn;
+  if (teacherName) document.getElementById('greeting-bar').innerHTML = t.greeting(esc(teacherName));
+  renderAll();
+}
+
+function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function checks(gridId, cls, items) {
+  const prev = {};
+  document.querySelectorAll('.' + cls).forEach((el) => { prev[el.value] = el.checked; });
+  const g = document.getElementById(gridId);
+  g.innerHTML = items.map((it) => {
+    const on = it.id in prev ? prev[it.id] : !!it.on;
+    return `<label class="check-item"><input type="checkbox" class="${cls}" value="${it.id}" ${on ? 'checked' : ''}> ${esc(L3(it.l))}</label>`;
+  }).join('');
+}
+
+function renderAll() {
+  // subjects
+  document.getElementById('subject-cards').innerHTML = Object.entries(SUBJECTS).map(([k, s]) =>
+    `<div class="config-card ${k === subject ? 'active' : ''}" onclick="setSubject('${k}')"><span class="icon">${s.icon}</span><h4>${L3(s.name)}</h4></div>`).join('');
+  // selects
+  const keepVal = (id) => (document.getElementById(id) || {}).value;
+  ['grade', 'improve-grade'].forEach((id) => {
+    const v = keepVal(id); const sel = document.getElementById(id);
+    sel.innerHTML = `<option value="">${T[uiLang].grade_label}...</option>` + GRADES.map((g, i) => `<option value="${i}">${L3(g)}</option>`).join('');
+    if (v) sel.value = v;
+  });
+  ['level', 'improve-level'].forEach((id) => {
+    const v = keepVal(id); const sel = document.getElementById(id);
+    let h = `<option value="">${T[uiLang].level_label}...</option>`;
+    LEVELS.forEach((grp, gi) => { h += `<optgroup label="${L3(grp.g)}">` + grp.o.map((o, oi) => `<option value="${gi}-${oi}">${L3(o)}</option>`).join('') + '</optgroup>'; });
+    sel.innerHTML = h; if (v) sel.value = v;
+  });
+  const dv = keepVal('duration') || '90';
+  document.getElementById('duration').innerHTML = DURATIONS.map((d) => `<option value="${d}">${d} ${T[uiLang].minutes}</option>`).join('');
+  document.getElementById('duration').value = dv;
+  const sv = keepVal('improve-subject') || subject;
+  document.getElementById('improve-subject').innerHTML = Object.entries(SUBJECTS).map(([k, s]) => `<option value="${k}">${s.icon} ${L3(s.name)}</option>`).join('');
+  document.getElementById('improve-subject').value = sv;
+  // grids
+  checks('attach-grid', 'att-check', ATTACH);
+  checks('conv-grid', 'cv-check', [...(CONV[subject === 'general' ? 'physics' : subject] || []).filter((c) => subject !== 'general' || ['brk', 'g10'].includes(c.id)), ...(subject === 'general' ? CONV.chemistry.filter((c) => c.id === 'safety') : []), ...CONV.common]);
+  checks('qtypes-grid', 'qt-check', [...QT_COMMON, ...(QT_SUBJ[subject] || [])]);
+  checks('comp-grid', 'cp-check', COMP);
+  checks('improve-grid', 'im-check', IMPROVE);
+  // topics placeholder
+  document.getElementById('topics').placeholder = SUBJECTS[subject].topicsPh;
+  renderStd();
+  // section rows placeholders
+  document.querySelectorAll('.sec-topic').forEach((el) => { el.placeholder = T[uiLang].sec_topic_ph; });
+  document.querySelectorAll('.sec-q').forEach((el) => { el.placeholder = T[uiLang].sec_q_ph; });
+  document.querySelectorAll('.sec-pts').forEach((el) => { el.placeholder = T[uiLang].sec_pts_ph; });
+}
+
+function renderStd() {
+  const c = T[uiLang].std_cols;
+  let h = `<table class="std-table"><tr><th>${c[0]}</th><th>${c[1]}</th><th>${c[2]}</th><th>${c[3]}</th></tr>`;
+  STD_ROWS.forEach((r) => {
+    if (r[0] === 'sec') h += `<tr class="sec"><td colspan="4">${L3(r[1])}</td></tr>`;
+    else h += `<tr><td>${r[0]}</td><td>${L3(r[1])}</td><td>${L3(r[2])}</td><td>${r[3]}</td></tr>`;
+  });
+  document.getElementById('std-structure').innerHTML = h + '</table>';
+}
+
+function setSubject(k) {
+  subject = k;
+  document.querySelectorAll('.cv-check, .qt-check').forEach((el) => el.remove());
+  renderAll();
+  if ((k === 'biology') && !document.querySelector('#sci-texts-container > div')) addSciText();
+}
+function setExamLang(l) {
+  examLang = l;
+  ['ar', 'he', 'en'].forEach((x) => document.getElementById('xlang-' + x).classList.toggle('active', x === l));
+}
+function setToolType(type) {
+  toolType = type;
+  ['quiz', 'task', 'worksheet', 'exam'].forEach((t) => document.getElementById('tool-' + t).classList.toggle('active', t === type));
+  setStructure(type === 'exam' ? 'std' : 'custom');
+}
+function setStructure(s) {
+  structure = s;
+  document.querySelector(`input[name="struct"][value="${s}"]`).checked = true;
+  document.getElementById('struct-std-card').classList.toggle('active', s === 'std');
+  document.getElementById('struct-custom-card').classList.toggle('active', s === 'custom');
+  document.getElementById('std-structure').style.display = s === 'std' ? 'block' : 'none';
+  document.getElementById('custom-structure').style.display = s === 'custom' ? 'block' : 'none';
+  if (s === 'custom' && !document.querySelector('.section-row')) addSection();
+}
+
+// sections
+function addSection() {
+  const id = 's' + Date.now() + Math.floor(Math.random() * 1000);
+  const row = document.createElement('div');
+  row.className = 'section-row'; row.id = id;
+  row.innerHTML = `
+    <input type="text" class="sec-topic" placeholder="${T[uiLang].sec_topic_ph}" />
+    <input type="number" class="sec-q" min="1" placeholder="${T[uiLang].sec_q_ph}" oninput="updateTotals()" />
+    <input type="number" class="sec-pts" min="1" placeholder="${T[uiLang].sec_pts_ph}" oninput="updateTotals()" />
+    <button class="btn-remove" onclick="removeEl('${id}')">×</button>`;
+  document.getElementById('sections-container').appendChild(row);
+  updateTotals();
+}
+function removeEl(id) { const el = document.getElementById(id); if (el) el.remove(); updateTotals(); }
+function updateTotals() {
+  let q = 0, p = 0;
+  document.querySelectorAll('.sec-q').forEach((el) => { q += parseInt(el.value, 10) || 0; });
+  document.querySelectorAll('.sec-pts').forEach((el) => { p += parseInt(el.value, 10) || 0; });
+  document.getElementById('total-q').textContent = q;
+  document.getElementById('total-pts').textContent = p;
+}
+
+// scientific texts
+function addSciText() {
+  const t = T[uiLang];
+  const id = 't' + Date.now() + Math.floor(Math.random() * 1000);
+  const box = document.createElement('div');
+  box.className = 'text-box'; box.id = id;
+  box.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <span style="font-weight:700; font-size:13px; color:var(--blue);">${t.st_title}</span>
+      <button class="btn-remove" onclick="removeEl('${id}')" style="width:auto; padding:4px 10px; font-size:13px;">✕</button>
+    </div>
+    <div class="grid4">
+      <div><label>${t.st_topic}</label><input type="text" class="st-topic" placeholder="..." style="width:100%; padding:8px 10px;" /></div>
+      <div><label>${t.st_words}</label><input type="number" class="st-words" placeholder="300" min="50" /></div>
+      <div><label>${t.st_q}</label><input type="number" class="st-q" placeholder="7" min="1" /></div>
+      <div><label>${t.st_pts}</label><input type="number" class="st-pts" placeholder="16" min="1" /></div>
+    </div>
+    <div style="margin-bottom:10px"><label>${t.st_extra}</label>
+      <select class="st-extra"><option value="">${t.st_none}</option><option value="جدول بيانات">${t.st_table}</option><option value="رسم بياني">${t.st_graph}</option><option value="وصف تجربة">${t.st_exp}</option></select></div>
+    <label>${t.st_text}</label>
+    <textarea class="st-text" placeholder="${t.st_text_ph}" style="min-height:70px"></textarea>`;
+  document.getElementById('sci-texts-container').appendChild(box);
+}
+
+// ══════════════════════════════════════════
+//  START / MODE
+// ══════════════════════════════════════════
+function startPlatform() {
+  const v = document.getElementById('teacher-name-input').value.trim();
+  teacherName = v || T[uiLang].teacher_placeholder.replace('...', '');
+  document.getElementById('step-welcome').style.display = 'none';
+  document.getElementById('step-main').style.display = 'block';
+  document.getElementById('greeting-bar').innerHTML = T[uiLang].greeting(esc(teacherName));
+  renderAll();
+  setStructure('std');
+}
+function switchMode(mode) {
+  currentMode = mode;
+  document.getElementById('card-build').classList.toggle('active', mode === 'build');
+  document.getElementById('card-improve').classList.toggle('active', mode === 'improve');
+  document.getElementById('panel-build').style.display = mode === 'build' ? 'block' : 'none';
+  document.getElementById('panel-improve').style.display = mode === 'improve' ? 'block' : 'none';
+  document.getElementById('result-box').style.display = 'none';
+}
+
+// ══════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════
+const gv = (id) => (document.getElementById(id) ? document.getElementById(id).value.trim() : '');
+const picked = (cls, items) => [...document.querySelectorAll('.' + cls + ':checked')].map((el) => items.find((i) => i.id === el.value)).filter(Boolean);
+const gradeAr = (id) => { const v = gv(id); return v === '' ? 'غير محدد' : GRADES[+v][0]; };
+const levelAr = (id) => { const v = gv(id); if (!v) return 'غير محدد'; const [g, o] = v.split('-').map(Number); return LEVELS[g].o[o][0]; };
+const numbered = (txt) => txt.split('\n').map((s) => s.trim()).filter(Boolean).map((s, i) => (/^\d+[.)-]/.test(s) ? s : `${i + 1}. ${s}`)).join('\n');
+
+// ══════════════════════════════════════════
+//  GENERATE BUILD PROMPT
+// ══════════════════════════════════════════
+function generateBuild() {
+  const topics = gv('topics');
+  if (!topics) { alert(T[uiLang].need_topics); document.getElementById('topics').focus(); return; }
+  const sName = SUBJECTS[subject].name[0];
+  const tool = TOOL_NAMES[toolType];
+  const total = gv('total-mark') || '100';
+  const att = picked('att-check', ATTACH);
+  const allConv = [...CONV.common, ...CONV.physics, ...CONV.chemistry, ...CONV.biology, ...CONV.math];
+  const conv = picked('cv-check', allConv).map((c) => c.p || c.l[0]);
+  if (gv('conv-notes')) conv.push(gv('conv-notes'));
+  const qts = picked('qt-check', [...QT_COMMON, ...Object.values(QT_SUBJ).flat()]).map((q) => q.l[0]);
+  const comp = picked('cp-check', COMP).map((c) => c.id);
+  const texts = [...document.querySelectorAll('#sci-texts-container > div')].map((b) => ({
+    topic: b.querySelector('.st-topic').value.trim(), words: b.querySelector('.st-words').value, q: b.querySelector('.st-q').value,
+    pts: b.querySelector('.st-pts').value, extra: b.querySelector('.st-extra').value, text: b.querySelector('.st-text').value.trim(),
+  }));
+  const L = LANG_SPEC[examLang];
+  const out = [];
+
+  out.push(`أنت معلم ${sName} خبير في بناء أدوات التقييم التحصيلية وفق تصنيف بلوم، وخبير في إعداد ملفات Word احترافية.`);
+  out.push(`\n⚡ المهمة: ابنِ ${TOOL_ACC[toolType]} في ${SUBJ_DEF[subject]}، منظمًا وكاملًا وفق المعطيات التالية، ثم أنتج ملفَّي Word (.docx): الأداة للطالب، ومفتاح الإجابات للمعلم.`);
+
+  out.push('\n## المدخلات');
+  out.push(`- المعلم/ة: ${teacherName}`);
+  out.push(`- المادة: ${sName}        - نوع الأداة: ${tool}`);
+  out.push(`- الصف: ${gradeAr('grade')}        - المستوى/المسار: ${levelAr('level')}`);
+  if (gv('unit')) out.push(`- الوحدة/الموضوع العام: ${gv('unit')}`);
+  if (gv('exam-title')) out.push(`- عنوان الأداة: ${gv('exam-title')}`);
+  out.push(`- المدة: ${gv('duration')} دقيقة        - العلامة الكلية: ${total}`);
+  out.push(`- لغة الأداة: ${L.name}`);
+
+  out.push('\n## المواضيع المطلوبة بالضبط');
+  out.push(numbered(topics));
+  if (gv('excluded')) out.push(`\nغير مطلوب / لم يُدرَّس (لا تسأل عنه، وأعطِ نتيجته جاهزة إن لزم):\n${gv('excluded')}`);
+
+  if (att.length) {
+    out.push('\n## المرفقات (مرفقة مع هذا الأمر)');
+    att.forEach((a) => out.push(`- ${a.p}`));
+  }
+  if (conv.length) {
+    out.push('\n## اصطلاحات الصف وما يُسمح به');
+    conv.forEach((c) => out.push(`- ${c}`));
+  }
+
+  out.push(`\n## قواعد المحتوى
+1. المصدر الوحيد للأسئلة هو المواضيع المذكورة والمرفقات. لا تضف مفاهيم أو قوانين أو مهارات من خارجها.
+   إذا ظهر في الصور موضوع لم يُذكر في القائمة، تجاهله.
+2. استعمل نفس المصطلحات والرموز وطريقة الحل التي في الصف والكتاب.
+3. استوحِ الأسئلة من أسئلة الكتاب واللوح (نفس الفكرة والنمط)، لكن بأعداد وأمثلة ومواقف جديدة وليست منسوخة.
+4. المواقف والأعداد واقعية ومناسبة لعمر الطلاب، واللغة واضحة ولا تحتمل أكثر من تفسير.
+5. لا يوجد سؤال يكشف إجابة سؤال آخر (افحص عبارات صح/خطأ وأكمل الفراغ مقابل الأسئلة المفتوحة، ولا تكتب القانون أو التعريف داخل سؤال يطلبه).`);
+
+  out.push('\n## مبنى الأداة (من الأسهل إلى الأصعب)');
+  if (structure === 'std') {
+    out.push(STD_PROMPT);
+    if (total !== '100') out.push(`حافظ على النسب نفسها (60% / 40%) وعدّل العلامات لتصبح العلامة الكلية ${total} بالضبط.`);
+    else out.push('المجموع 100 بالضبط.');
+  } else {
+    const rows = [...document.querySelectorAll('.section-row')].map((r) => ({ t: r.querySelector('.sec-topic').value.trim(), q: r.querySelector('.sec-q').value, p: r.querySelector('.sec-pts').value })).filter((r) => r.t || r.q || r.p);
+    rows.forEach((r, i) => out.push(`- القسم ${i + 1}: ${r.t || '(يحدده المحرك)'} – ${r.q || '?'} أسئلة، ${r.p || '?'} علامة`));
+    out.push(`- المجموع ${total} علامة. رتّب الأسئلة من الأسهل إلى الأصعب، ونوّع مستويات بلوم (تذكّر، فهم، تطبيق، تحليل، استنتاج، تقييم)، واذكر العلامة بجانب كل سؤال.`);
+  }
+
+  if (texts.length) {
+    out.push('\n## نصوص علمية (قراءة وفهم وتحليل)');
+    texts.forEach((t, i) => {
+      out.push(`\nالنص ${i + 1}:`);
+      if (t.topic) out.push(`- الموضوع: ${t.topic}`);
+      out.push(`- الطول: ${t.words || '250–400'} كلمة تقريبًا، بأسطر مرقّمة (كل 5 أسطر).`);
+      if (t.q) out.push(`- عدد الأسئلة: ${t.q}`);
+      if (t.pts) out.push(`- العلامات: ${t.pts}`);
+      if (t.extra) out.push(`- يتضمّن النص: ${t.extra}`);
+      if (t.text) out.push(`- النص (استعمله كما هو مع تعديلات لغوية بسيطة فقط):\n---\n${t.text}\n---`);
+      else out.push('- لم يُرفق نص: اكتب نصًا علميًا جديدًا وغير مألوف، مبنيًا على المواضيع المطلوبة فقط.');
+    });
+    out.push('- أسئلة النص متدرّجة: استخراج معلومة (مع رقم السطر)، شرح مصطلح من السياق، الفكرة المركزية، ربط بمفهوم متعلَّم، قراءة جدول/رسم، متغيرات التجربة وفرضيتها، ثم استنتاج أو توقّع.');
+    if (structure === 'std') out.push('- في المبنى المعتمد: يحلّ بلوك النص محل السؤالين 13 و14 (16 علامة) مع الحفاظ على توزيع بلوم.');
+  }
+
+  if (qts.length) out.push('\n## أنواع الأسئلة المفضلة\n' + qts.map((q) => `- ${q}`).join('\n'));
+
+  out.push(`\n## معايير عامة لأنواع الأسئلة
+- صح/خطأ: عبارات مفاهيمية عن المصطلحات والعلاقات والخصائص، وليست عمليات حسابية طويلة؛ 4 صحيحة و4 خاطئة؛ لا يُطلب تصحيح الخاطئة؛ لا تستعمل "دائمًا" أو "أبدًا" كتلميح.
+- اختيار من متعدد: إجابة صحيحة واحدة، وبدائل خاطئة مبنية على أخطاء وتصورات شائعة؛ وزّع موقع الإجابة الصحيحة بشكل متوازن.
+- كل بند يذكر علامته، والمطلوب واضح (رقم، وحدة، تعليل، مثال...).`);
+  if (comp.includes('easy')) out.push('- سهولة التصحيح: أكثر من 80% من الأداة إجاباته رقم أو حرف أو إشارة أو كلمة أو جملة قصيرة؛ استعمل جداول للتعبئة ودوائر حول الخيار و✓ في خانات.');
+  if (comp.includes('figs')) out.push('\n## الرسومات\n- أنشئ رسومات أصلية بسيطة وواضحة (PNG) حيث تساعد على الفهم، أو استعمل رسومات الكتاب المرفقة.\n- الرسم لا يكشف الإجابة (اكتب "؟" بدل القيمة المطلوبة)، والنص العربي فيه مكتوب بشكل صحيح من اليمين إلى اليسار.\n- أدرج كل رسم داخل سؤاله.');
+
+  out.push('\n## ملحق المادة\n' + MODULES[subject]);
+
+  out.push(`\n## المخرجات: ملفا Word (.docx)
+### الملف الأول: ${tool}_[الموضوع]_[الصف].docx
+- ${L.fmt}
+- الصيغ والوحدات والتعابير اللاتينية تُعرض بالترتيب الصحيح داخل النص (علامات الاتجاه LRM/RLM أو فقرات مستقلة للصيغ).
+- ${att.some((a) => a.id === 'hdr') ? 'أعلى الصفحة: صورة ترويسة المدرسة المرفقة، ثم إطار فيه' : 'أعلى الصفحة: إطار فيه'}: المادة، الصف، الوحدة، المدة، العلامة الكلية، التاريخ.
+- حقول الطالب: الاسم، الصف/الشعبة، العلامة النهائية.
+- تعليمات قصيرة تتضمن الاصطلاحات وما يُسمح باستعماله.
+- عنوان لكل قسم، والعلامة بجانب كل سؤال وبند، وأسطر منقطة كافية للإجابة.`);
+  if (comp.includes('onepage')) out.push('- كل سؤال كامل في صفحة واحدة، بلا صفحات فارغة وبلا فواصل صفحات يدوية.');
+  out.push('- ترقيم الصفحات، وفي النهاية: "انتهت الأسئلة – بالتوفيق".');
+  if (comp.includes('answerSheet')) out.push('- أضف ورقة إجابة منفصلة في الصفحة الأولى للجزء الموضوعي (✓/✗، أ/ب/ج/د، أرقام).');
+  out.push(`### الملف الثاني: مفتاح_إجابات_[الموضوع]_[الصف].docx
+- نفس الترويسة مع شريط "مفتاح الإجابات – خاص بالمعلم".`);
+  if (comp.includes('key')) out.push('- لكل سؤال: مستوى بلوم، والإجابة النموذجية، وجدول توزيع العلامات (النقطة المطلوبة، العلامة، إجابات بديلة مقبولة). ملاحظة عامة عن الخصم على الأخطاء الصغيرة ومتابعة الخطأ. في صح/خطأ: توضيح للمعلم غير مطلوب من الطالب.');
+  else out.push('- الإجابة الصحيحة لكل سؤال وبند مع علامته.');
+  if (comp.includes('spec')) out.push('- جدول المواصفات (السؤال، النوع، مستوى بلوم، العلامة، الجزء من المادة) وتوزيع العلامات حسب مستويات بلوم مع النسب.');
+  if (comp.includes('modelB')) out.push('\n## نموذج ب\nأنشئ أيضًا نموذجًا ثانيًا مكافئًا بأعداد ومواقف مختلفة، ونفس المبنى، مع مفتاحه.');
+
+  if (gv('notes')) out.push('\n## ملاحظات إضافية من المعلم\n' + gv('notes'));
+
+  out.push(`\n## قبل التسليم
+1. حلّ كل الأسئلة فعليًا وتأكد من صحة الإجابات، وأن المجموع ${total} والتوزيع صحيح.
+2. افتح الملفين بصريًا (حوّلهما إلى صور) وتأكد من اتجاه النص والصيغ، ووضوح الرسومات، وعدم وجود صفحات فارغة${comp.includes('onepage') ? '، وأن كل سؤال في صفحة واحدة' : ''}.
+3. تأكد أن المفتاح يطابق الأداة بندًا بندًا${comp.includes('noreveal') ? '، وأن لا سؤال يكشف إجابة سؤال آخر' : ''}.
+ثم سلّم الملفين، واكتب ملخصًا من سطرين عن توزيع الأسئلة، وقائمة قصيرة بالافتراضات التي اتخذتها.`);
+
+  const rem = att.map((a) => L3(a.l));
+  if (texts.some((t) => !t.text) === false && texts.length) { /* texts pasted */ }
+  showResult(out.join('\n'), rem.length ? T[uiLang].reminder + rem.join('، ') : '');
+}
+
+// ══════════════════════════════════════════
+//  GENERATE IMPROVE PROMPT
+// ══════════════════════════════════════════
+function generateImprove() {
+  const sk = gv('improve-subject') || subject;
+  const sName = SUBJECTS[sk].name[0];
+  const tool = TOOL_NAMES[toolType];
+  const items = picked('im-check', IMPROVE);
+  const out = [];
+  out.push(`أنت معلم ${sName} خبير في القياس والتقويم وفق تصنيف بلوم، وخبير في إعداد ملفات Word احترافية.`);
+  out.push(`\n⚡ المهمة: حسِّن ووسِّع وكيِّف ${tool === 'امتحان' ? 'الامتحان' : 'ال' + tool} المرفق${gv('improve-notes') ? ' وفق الطلبات التالية' : ''}.`);
+  out.push(`\n## التفاصيل\n- المعلم/ة: ${teacherName}\n- المادة: ${sName}\n- الصف: ${gradeAr('improve-grade')}\n- المستوى/المسار: ${levelAr('improve-level')}`);
+  if (items.length) out.push('\n## المطلوب تحسينه\n' + items.map((i, n) => `${n + 1}. ${i.p}`).join('\n'));
+  if (gv('improve-notes')) out.push('\n## طلبات محددة من المعلم\n' + gv('improve-notes'));
+  out.push(`\n## قواعد العمل
+- اعمل على الملف المرفق نفسه وبنفس صيغته (Word)، وحافظ على كل تعديلات المعلم فيه: الترويسة، الصور، الصياغات التي غيّرها.
+- إذا أُرفقت مواد جديدة (صور لوح، أسئلة كتاب)، اعتمد عليها وعدّل الأسئلة لتناسبها.
+- حافظ على المبنى (عدد الأسئلة والعلامات والنسب) ما لم يُطلب تغييره، وتأكد أن المجموع صحيح.
+- لا يوجد سؤال يكشف إجابة سؤال آخر، وصح/خطأ مفاهيمي، وبدائل الاختيار من متعدد مبنية على أخطاء شائعة.
+- اتجاه النص صحيح، والصيغ والوحدات تظهر بالترتيب الصحيح، وكل سؤال كامل في صفحة واحدة بلا صفحات فارغة.
+- حدّث مفتاح الإجابات وجدول المواصفات ليطابقا الأداة المعدّلة.
+
+## قبل التسليم
+- حلّ الأسئلة المعدّلة وتأكد من صحة الإجابات، وافتح الملفات بصريًا للتحقق من التنسيق.
+- سلّم الملف المعدّل ومفتاحه، واكتب قائمة قصيرة بما تغيّر.
+
+📎 الأداة المرفقة:`);
+  showResult(out.join('\n'), T[uiLang].reminder_improve);
+}
+
+// ══════════════════════════════════════════
+//  RESULT / COPY
+// ══════════════════════════════════════════
+function showResult(prompt, reminder) {
+  const box = document.getElementById('result-box');
+  document.getElementById('result-prompt').textContent = prompt;
+  const r = document.getElementById('reminder');
+  r.textContent = reminder || ''; r.style.display = reminder ? 'block' : 'none';
+  document.getElementById('result-ready').textContent = T[uiLang].result_ready;
+  document.querySelector('.copy-btn').textContent = T[uiLang].copy_btn;
+  box.style.display = 'block';
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function copyPrompt() {
+  const text = document.getElementById('result-prompt').textContent;
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(showCopySuccess).catch(() => fallbackCopy(text));
+  else fallbackCopy(text);
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); showCopySuccess(); } catch (e) { alert('Please copy manually (Ctrl+C)'); }
+  document.body.removeChild(ta);
+}
+function showCopySuccess() {
+  const btn = document.querySelector('.copy-btn');
+  btn.textContent = T[uiLang].copy_success;
+  setTimeout(() => { btn.textContent = T[uiLang].copy_btn; }, 2000);
+}
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+document.getElementById('teacher-name-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') startPlatform(); });
+setUILang('ar');
+</script>
+</body>
+</html>
