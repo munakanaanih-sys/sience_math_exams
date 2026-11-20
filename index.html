@@ -588,7 +588,23 @@
     padding: 10px 14px; margin-bottom: 14px; font-size: 13px; color: #6b4c00; line-height: 1.7;
   }
   .hint strong { color: #6b4c00; }
-  .radio-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .radio-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .min-badge { display:inline-block; background:var(--gold); color:#1a1a1a; border-radius:20px; padding:2px 10px; font-size:11px; font-weight:700; margin-inline-start:6px; }
+  .std-table td.l { text-align: start; }
+  .bal-box { margin-top: 20px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; background: var(--bg-card); }
+  .bal-title { font-weight: 700; font-size: 14px; color: var(--blue); margin-bottom: 10px; }
+  .bal-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; align-items: start; }
+  .bal-grid input[type="number"] { width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; background: #fff; }
+  .bal-grid input[type="number"]:disabled { background: var(--bg, #f5f5f5); color: var(--text-muted); }
+  .bal-grid input[type="range"] { width: 100%; accent-color: var(--blue); }
+  .bal-bar { display: flex; height: 30px; border-radius: 8px; overflow: hidden; margin: 8px 0 6px; font-size: 12px; font-weight: 700; }
+  .bal-bar div { display: flex; align-items: center; justify-content: center; white-space: nowrap; overflow: hidden; transition: width 0.2s; }
+  .bal-low { background: var(--blue-pale); color: var(--blue); }
+  .bal-high { background: var(--gold-pale); color: #6b4c00; }
+  .bal-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+  .bal-legend b { color: var(--text); }
+  .bal-reset { background: none; border: 1px dashed var(--blue-light); color: var(--blue); border-radius: 14px; padding: 2px 10px; font-size: 12px; cursor: pointer; font-family: var(--font-main); }
+  .bal-warn { font-size: 12px; color: #9a3412; margin-top: 6px; }
   .radio-card {
     display: flex; gap: 10px; align-items: flex-start; padding: 14px 16px; cursor: pointer;
     border: 2px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-card); transition: all 0.2s;
@@ -623,6 +639,7 @@
   @media (max-width: 640px) {
     .subject-cards { grid-template-columns: 1fr 1fr; }
     .radio-row { grid-template-columns: 1fr; }
+    .bal-grid, .bal-legend { grid-template-columns: 1fr; }
     .text-box .grid4 { grid-template-columns: 1fr 1fr; }
   }
 </style>
@@ -734,12 +751,12 @@
         <div class="panel-header" data-t="panel_details">📋 تفاصيل الأداة</div>
         <div class="panel-body">
           <div class="form-row">
-            <div class="form-group" style="margin-bottom:0"><label data-t="grade_label">الصف</label><select id="grade"></select></div>
+            <div class="form-group" style="margin-bottom:0"><label data-t="grade_label">الصف</label><select id="grade" onchange="renderMin(); renderBalance()"></select></div>
             <div class="form-group" style="margin-bottom:0"><label data-t="level_label">المستوى / المسار</label><select id="level"></select></div>
           </div>
           <div class="form-row" style="margin-top:16px; margin-bottom:0">
-            <div class="form-group" style="margin-bottom:0"><label data-t="duration_label">مدة الأداة</label><select id="duration"></select></div>
-            <div class="form-group" style="margin-bottom:0"><label data-t="total_label">العلامة الكلية</label><select id="total-mark"><option>100</option><option>50</option><option>40</option><option>30</option><option>20</option></select></div>
+            <div class="form-group" style="margin-bottom:0"><label data-t="duration_label">مدة الأداة</label><select id="duration" onchange="renderBalance()"></select></div>
+            <div class="form-group" style="margin-bottom:0"><label data-t="total_label">العلامة الكلية</label><select id="total-mark" onchange="renderBalance()"><option>100</option><option>50</option><option>40</option><option>30</option><option>20</option></select></div>
           </div>
           <div class="form-group" style="margin-top:16px; margin-bottom:0">
             <label data-t="unit_label">الوحدة / الموضوع العام</label>
@@ -782,6 +799,10 @@
         <div class="panel-header" data-t="panel_structure">📊 هيكل الأداة وتوزيع الدرجات</div>
         <div class="panel-body">
           <div class="radio-row">
+            <label class="radio-card" id="struct-min-card">
+              <input type="radio" name="struct" value="min" onchange="setStructure('min')">
+              <div><h4><span data-t="struct_min">مبنى امتحانات الوزارة</span><span class="min-badge">תנופה</span></h4><p data-t="struct_min_desc">حسب مواصفات الوزارة وراما (مفرط تنوفا) للمادة والصف المختارين</p></div>
+            </label>
             <label class="radio-card active" id="struct-std-card">
               <input type="radio" name="struct" value="std" checked onchange="setStructure('std')">
               <div><h4 data-t="struct_std">المبنى المعتمد (15 سؤالًا)</h4><p data-t="struct_std_desc">قسمان: 60 معرفة وفهم وتطبيق + 40 تحليل واستنتاج، متدرّج حسب سلّم بلوم</p></div>
@@ -792,6 +813,7 @@
             </label>
           </div>
 
+          <div id="min-structure" style="display:none"></div>
           <div id="std-structure"></div>
 
           <div id="custom-structure" style="display:none">
@@ -804,6 +826,31 @@
               <span><span data-t="total_q">إجمالي الأسئلة:</span> <span id="total-q">0</span></span>
               <span>·</span>
               <span><span data-t="total_pts">إجمالي الدرجات:</span> <span id="total-pts">0</span></span>
+            </div>
+          </div>
+
+          <!-- QUESTION COUNT & THINKING-LEVEL BALANCE -->
+          <div class="bal-box">
+            <div class="bal-title" data-t="bal_title">⚖️ عدد الأسئلة وتوزيع العلامات على مستويات التفكير</div>
+            <div class="bal-grid">
+              <div>
+                <label style="font-size:13px; font-weight:600" data-t="bal_q_label">عدد الأسئلة</label>
+                <input type="number" id="q-count" min="3" max="60" oninput="qTouched = true; renderBalance()" />
+                <div class="field-note" id="q-note"></div>
+              </div>
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px">
+                  <label style="font-size:13px; font-weight:600" for="low-pct"><span data-t="bal_low_label">نسبة علامات المهارات الدنيا</span>: <span id="low-pct-val">60</span>%</label>
+                  <button type="button" class="bal-reset" onclick="resetBalance()" data-t="bal_reset">↺ المقترح 60/40</button>
+                </div>
+                <input type="range" id="low-pct" min="30" max="90" step="5" value="60" oninput="lowPct = +this.value; renderBalance()" />
+                <div class="bal-bar"><div class="bal-low" id="bal-low"></div><div class="bal-high" id="bal-high"></div></div>
+                <div id="bal-warn" class="bal-warn" style="display:none"></div>
+              </div>
+            </div>
+            <div class="bal-legend" style="margin-top:8px">
+              <div><b data-t="bal_low_name">المهارات الدنيا</b> – <span data-t="bal_low_desc">تذكّر ومعرفة، فهم، تطبيق مباشر لقانون أو إجراء تعلّمه الطالب</span></div>
+              <div><b data-t="bal_high_name">المهارات العليا</b> – <span data-t="bal_high_desc">تطبيق في موقف جديد، تحليل، استنتاج، تقييم وتبرير، إبداع واقتراح حلول</span></div>
             </div>
           </div>
 
@@ -906,6 +953,8 @@ let subject = 'physics';
 let examLang = 'ar';
 let toolType = 'exam';
 let structure = 'std';
+let lowPct = 60;        // % of points for lower-order skills (suggested 60)
+let qTouched = false;   // teacher typed a question count
 
 // ══════════════════════════════════════════
 //  TRANSLATIONS (interface)
@@ -966,6 +1015,27 @@ const T = {
     footer: 'ومضات ذكية · نسخة العلوم والرياضيات',
     topics_placeholder: '',
     std_cols: ['السؤال', 'النوع', 'بلوم', 'العلامة'],
+    struct_min: 'مبنى امتحانات الوزارة', struct_min_desc: 'حسب مواصفات الوزارة وراما (مفرط تنوفا) للمادة والصف المختارين',
+    min_cols: ['المجال', 'المحتوى والوصف', 'الوزن'],
+    min_hint_math: '💡 مبنى امتحان تنوفا في الرياضيات للصف التاسع حسب مفرط راما (تشفاز): نحو 30 سؤالًا في 90 دقيقة، موزعة على أربعة مجالات.',
+    min_hint_sci: '💡 مبنى امتحان تنوفا في العلوم والتكنولوجيا للصف التاسع حسب مفرط راما (تشفاز): 4–5 وحدات، كل وحدة مبنية على نص معلومات عن ظاهرة أو بحث علمي.',
+    min_no_grade: '⚠️ لم يُختر صف – يُعرض مبنى الصف التاسع.',
+    min_interp: 'ℹ️ امتحان تنوفا يُجرى للصف التاسع فقط؛ لهذا الصف يُكيَّف المبنى نفسه ويقتصر على ما دُرّس حتى الآن.',
+    min_bagrut: 'ℹ️ لا يوجد امتحان تنوفا لهذا الصف، ولامتحانات البجروت مواصفات خاصة. المبنى هنا مُكيَّف بأسلوب تنوفا.',
+    min_single: 'ℹ️ امتحان تنوفا متكامل (كيمياء، أحياء، فيزياء). عند اختيار مادة واحدة يُطبَّق مبناه على هذه المادة فقط.',
+    min_src: 'المصدر: مفرط راما',
+    bal_title: '⚖️ عدد الأسئلة وتوزيع العلامات على مستويات التفكير',
+    bal_q_label: 'عدد الأسئلة', bal_low_label: 'نسبة علامات المهارات الدنيا', bal_reset: '↺ المقترح 60/40',
+    bal_low_name: 'المهارات الدنيا', bal_low_desc: 'تذكّر ومعرفة، فهم، تطبيق مباشر لقانون أو إجراء تعلّمه الطالب',
+    bal_high_name: 'المهارات العليا', bal_high_desc: 'تطبيق في موقف جديد، تحليل، استنتاج، تقييم وتبرير، إبداع واقتراح حلول',
+    bal_low_short: 'دنيا', bal_high_short: 'عليا', bal_marks: 'علامة',
+    q_note_std: 'ثابت في المبنى المعتمد (15). لتغييره اختر «مبنى مخصص».',
+    q_note_min: 'المقترح حسب مدة الأداة (امتحان تنوفا: نحو 30 سؤالًا في 90 دقيقة).',
+    q_note_custom_sum: 'محسوب من مجموع أسئلة الأقسام أعلاه.',
+    q_note_free: 'المقترح حسب مدة الأداة. يمكنك تغييره.',
+    q_warn_many: '⚠️ عدد كبير نسبيًا لمدة {d} دقيقة.',
+    bal_warn_low: '⚠️ نسبة عالية للمهارات الدنيا – مناسبة لاختبار قصير أو مستوى داعم، وأقل لامتحان نهاية وحدة.',
+    bal_warn_high: '⚠️ نسبة عالية للمهارات العليا – تأكد أنها تناسب مستوى الصف وأن الطلاب تدرّبوا على هذا النوع من الأسئلة.',
   },
   he: {
     ui_lang: 'שפת ממשק:',
@@ -1020,6 +1090,27 @@ const T = {
     footer: 'הבזקים חכמים · גרסת מדעים ומתמטיקה',
     topics_placeholder: '',
     std_cols: ['שאלה', 'סוג', 'בלום', 'ניקוד'],
+    struct_min: 'מבנה מבחני המשרד', struct_min_desc: 'לפי מפרט משרד החינוך וראמ"ה (תנופה) למקצוע ולכיתה שנבחרו',
+    min_cols: ['תחום', 'תוכן ותיאור', 'משקל'],
+    min_hint_math: '💡 מבנה מבחן תנופה במתמטיקה לכיתה ט\' לפי מפרט ראמ"ה (תשפ"ז): כ-30 שאלות ב-90 דקות, בארבעה תחומים.',
+    min_hint_sci: '💡 מבנה מבחן תנופה במדע וטכנולוגיה לכיתה ט\' לפי מפרט ראמ"ה (תשפ"ז): 4–5 יחידות, כל אחת סביב קטע מידע על תופעה או מחקר.',
+    min_no_grade: '⚠️ לא נבחרה כיתה – מוצג המבנה של כיתה ט\'.',
+    min_interp: 'ℹ️ מבחן תנופה נערך בכיתה ט\' בלבד; לכיתה זו המבנה מותאם ומוגבל למה שנלמד עד כה.',
+    min_bagrut: 'ℹ️ אין מבחן תנופה לכיתה זו, ולבגרות מפרט משלה. המבנה כאן מותאם בסגנון תנופה.',
+    min_single: 'ℹ️ מבחן תנופה משלב כימיה, ביולוגיה ופיזיקה. כשנבחר מקצוע אחד המבנה מוחל עליו בלבד.',
+    min_src: 'מקור: מפרט ראמ"ה',
+    bal_title: '⚖️ מספר שאלות וחלוקת ניקוד לפי רמות חשיבה',
+    bal_q_label: 'מספר שאלות', bal_low_label: 'אחוז ניקוד לחשיבה מסדר נמוך', bal_reset: '↺ מומלץ 60/40',
+    bal_low_name: 'חשיבה מסדר נמוך', bal_low_desc: 'זכירה וידע, הבנה, יישום ישיר של חוק או נוהל שנלמד',
+    bal_high_name: 'חשיבה מסדר גבוה', bal_high_desc: 'יישום במצב חדש, ניתוח, הסקה, הערכה ונימוק, יצירה והצעת פתרונות',
+    bal_low_short: 'נמוך', bal_high_short: 'גבוה', bal_marks: 'נק\'',
+    q_note_std: 'קבוע במבנה המאושר (15). לשינוי בחרו «מבנה מותאם».',
+    q_note_min: 'מומלץ לפי משך הכלי (מבחן תנופה: כ-30 שאלות ב-90 דקות).',
+    q_note_custom_sum: 'מחושב מסכום השאלות בחלקים למעלה.',
+    q_note_free: 'מומלץ לפי משך הכלי. אפשר לשנות.',
+    q_warn_many: '⚠️ מספר גבוה יחסית ל-{d} דקות.',
+    bal_warn_low: '⚠️ אחוז גבוה לחשיבה מסדר נמוך – מתאים לבוחן קצר או לרמה תומכת, פחות למבחן סוף יחידה.',
+    bal_warn_high: '⚠️ אחוז גבוה לחשיבה מסדר גבוה – ודאו שהוא מתאים לרמת הכיתה ושהתלמידים תרגלו שאלות כאלה.',
   },
   en: {
     ui_lang: 'Interface language:',
@@ -1074,6 +1165,27 @@ const T = {
     footer: 'Smart Flashes · Science & Math edition',
     topics_placeholder: '',
     std_cols: ['Q', 'Type', 'Bloom', 'Points'],
+    struct_min: 'Ministry exam structure', struct_min_desc: 'Following the Ministry & RAMA (Tnufa) specification for the subject and grade',
+    min_cols: ['Domain', 'Content & description', 'Weight'],
+    min_hint_math: '💡 Tnufa Grade 9 mathematics exam structure, per the RAMA specification (2026–27): about 30 questions in 90 minutes, across four domains.',
+    min_hint_sci: '💡 Tnufa Grade 9 science & technology exam structure, per the RAMA specification (2026–27): 4–5 units, each built around an information passage about a phenomenon or study.',
+    min_no_grade: '⚠️ No grade selected – showing the Grade 9 structure.',
+    min_interp: 'ℹ️ The Tnufa exam is for Grade 9 only; for this grade the same structure is adapted and limited to what has been taught so far.',
+    min_bagrut: 'ℹ️ There is no Tnufa exam for this grade, and Bagrut exams have their own specifications. This is a Tnufa-style adaptation.',
+    min_single: 'ℹ️ The Tnufa exam is integrated (chemistry, biology, physics). With a single subject selected, its structure is applied to that subject only.',
+    min_src: 'Source: RAMA specification',
+    bal_title: '⚖️ Number of questions & points by thinking level',
+    bal_q_label: 'Number of questions', bal_low_label: 'Points for lower-order skills', bal_reset: '↺ Suggested 60/40',
+    bal_low_name: 'Lower-order skills', bal_low_desc: 'Remembering & knowledge, understanding, direct application of a learned law or procedure',
+    bal_high_name: 'Higher-order skills', bal_high_desc: 'Application in a new situation, analysis, inference, evaluation & justification, creating & proposing solutions',
+    bal_low_short: 'Lower', bal_high_short: 'Higher', bal_marks: 'pts',
+    q_note_std: 'Fixed in the standard structure (15). Choose "Custom structure" to change it.',
+    q_note_min: 'Suggested from the duration (Tnufa: about 30 questions in 90 minutes).',
+    q_note_custom_sum: 'Calculated from the section question counts above.',
+    q_note_free: 'Suggested from the duration. You can change it.',
+    q_warn_many: '⚠️ Quite a lot for {d} minutes.',
+    bal_warn_low: '⚠️ High share of lower-order skills – fine for a short quiz or support level, less so for an end-of-unit exam.',
+    bal_warn_high: '⚠️ High share of higher-order skills – make sure it suits the class level and students have practised such questions.',
   },
 };
 
@@ -1343,6 +1455,8 @@ function renderAll() {
   // topics placeholder
   document.getElementById('topics').placeholder = SUBJECTS[subject].topicsPh;
   renderStd();
+  renderMin();
+  renderBalance();
   // section rows placeholders
   document.querySelectorAll('.sec-topic').forEach((el) => { el.placeholder = T[uiLang].sec_topic_ph; });
   document.querySelectorAll('.sec-q').forEach((el) => { el.placeholder = T[uiLang].sec_q_ph; });
@@ -1377,11 +1491,16 @@ function setToolType(type) {
 function setStructure(s) {
   structure = s;
   document.querySelector(`input[name="struct"][value="${s}"]`).checked = true;
+  document.getElementById('struct-min-card').classList.toggle('active', s === 'min');
   document.getElementById('struct-std-card').classList.toggle('active', s === 'std');
   document.getElementById('struct-custom-card').classList.toggle('active', s === 'custom');
+  document.getElementById('min-structure').style.display = s === 'min' ? 'block' : 'none';
   document.getElementById('std-structure').style.display = s === 'std' ? 'block' : 'none';
   document.getElementById('custom-structure').style.display = s === 'custom' ? 'block' : 'none';
   if (s === 'custom' && !document.querySelector('.section-row')) addSection();
+  qTouched = false;
+  renderMin();
+  renderBalance();
 }
 
 // sections
@@ -1404,6 +1523,7 @@ function updateTotals() {
   document.querySelectorAll('.sec-pts').forEach((el) => { p += parseInt(el.value, 10) || 0; });
   document.getElementById('total-q').textContent = q;
   document.getElementById('total-pts').textContent = p;
+  if (typeof renderBalance === 'function') renderBalance();
 }
 
 // scientific texts
@@ -1428,6 +1548,178 @@ function addSciText() {
     <label>${t.st_text}</label>
     <textarea class="st-text" placeholder="${t.st_text_ph}" style="min-height:70px"></textarea>`;
   document.getElementById('sci-texts-container').appendChild(box);
+}
+
+
+// ══════════════════════════════════════════
+//  MINISTRY (TNUFA / RAMA) STRUCTURES
+//  Sources: RAMA specifications 2026–27 (תשפ"ז)
+//  math:    https://meyda.education.gov.il/files/Rama/Mifrat_math_9_2027.pdf
+//  science: https://meyda.education.gov.il/files/Rama/Mifrat_sci_9_2027.pdf
+//  rows: [domain (3 langs), description (3 langs), weight %]
+// ══════════════════════════════════════════
+const MIN_SRC = {
+  math: 'https://meyda.education.gov.il/files/Rama/Mifrat_math_9_2027.pdf',
+  sci: 'https://meyda.education.gov.il/files/Rama/Mifrat_sci_9_2027.pdf',
+};
+const MIN_MATH_ROWS = [
+  [['المجال العددي', 'התחום המספרי', 'Numerical'],
+   ['العمليات الحسابية وقوانينها، القوى والجذور، الأعداد السالبة والموجبة والصفر، النسبة والتناسب، مقياس الرسم، النسب المئوية',
+    'פעולות חשבון וחוקיהן, חזקות ושורשים, מספרים מכוונים ואפס, יחס ופרופורציה, קנה מידה, אחוזים',
+    'Operations and their laws, powers & roots, negative/positive numbers & zero, ratio & proportion, scale, percentages'], 15],
+  [['المجال الجبري', 'התחום האלגברי', 'Algebraic'],
+   ['المتغيرات والتعابير الجبرية، تعميم أنماط عددية، مدخل إلى الدوال، معادلات وأنظمة معادلات من الدرجة الأولى، مسائل كلامية، الدالة الخطية، المتباينات الخطية، قانون التوزيع الموسّع',
+    'משתנים וביטויים אלגבריים, הכללת תבניות מספריות, מבוא לפונקציות, משוואות ומערכות משוואות ממעלה ראשונה, בעיות מילוליות, פונקציה קווית, אי-שוויונות קוויים, חוק הפילוג המורחב',
+    'Variables & expressions, generalizing patterns, intro to functions, linear equations & systems, word problems, linear functions, linear inequalities, extended distributive law'], 40],
+  [['المجال الهندسي', 'התחום הגאומטרי', 'Geometric'],
+   ['مستقيمات متعامدة ومتوازية (زوايا متبادلة ومتناظرة)، مساحات، زوايا، مثلثات (متوسطات، تطابق، متساوي الساقين، تشابه)، نظرية فيثاغورس، أشكال رباعية، صناديق (متوازي مستطيلات)',
+    'ישרים מאונכים ומקבילים (זוויות מתחלפות ומתאימות), שטחים, זוויות, משולשים (תיכונים, חפיפה, שווה-שוקיים, דמיון), משפט פיתגורס, מרובעים, תיבות',
+    'Perpendicular & parallel lines (alternate/corresponding angles), areas, angles, triangles (medians, congruence, isosceles, similarity), Pythagoras, quadrilaterals, cuboids'], 30],
+  [['البيانات وعدم اليقين', 'נתונים ואי-ודאות', 'Data & uncertainty'],
+   ['جمع البيانات وتنظيمها في تمثيلات مختلفة، التكرار والتكرار النسبي (بما في ذلك النسب المئوية)، مقاييس النزعة المركزية',
+    'איסוף וארגון נתונים בייצוגים שונים, שכיחות ושכיחות יחסית (כולל אחוזים), מדדי מרכז',
+    'Collecting & organizing data in various representations, frequency & relative frequency (incl. %), measures of central tendency'], 15],
+];
+const MIN_MATH_NOTES = [
+  ['نحو 30 سؤالًا في 90 دقيقة؛ يُسمح بالآلة الحاسبة والمسطرة.', 'כ-30 שאלות ב-90 דקות; מותר מחשבון וסרגל.', 'About 30 questions in 90 minutes; calculator and ruler allowed.'],
+  ['أنواع الأسئلة: مغلقة (اختيار من متعدد)، مفتوحة بإجابة واحدة، مفتوحة يمكن حلها بأكثر من طريقة، ومفتوحة تتطلب شرح الحل أو وصفه. تشمل حسابًا مع تبرير أو بدونه، رسم أشكال هندسية، وإكمال معطيات في رسم.',
+   'סוגי שאלות: סגורות (בחירה מרובה), פתוחות עם תשובה אחת, פתוחות שאפשר לפתור ביותר מדרך אחת, ופתוחות הדורשות הסבר או תיאור הפתרון; כולל חישוב עם/בלי נימוק, שרטוט וצירוף נתונים לסרטוט.',
+   'Question types: closed (multiple choice), open with a single answer, open with more than one solution path, and open requiring an explanation; includes calculation with/without justification, drawing figures and completing data in diagrams.'],
+  ['نحو 25% من الأسئلة مسائل كلامية في سياقات واقعية: بخطوة واحدة، بخطوتين، أو متعددة الخطوات.', 'כ-25% מהשאלות הן בעיות מילוליות בהקשרים אמיתיים: חד-שלביות, דו-שלביות או רב-שלביות.', 'About 25% of the questions are word problems in realistic contexts: one-step, two-step or multi-step.'],
+  ['بعض الأسئلة تفحص التفكير النقدي: تقييم ادعاءات، التقدير، واتخاذ قرارات مبرَّرة. التمثيلات: لفظي، عددي، بياني، رمزي.', 'חלק מהשאלות בודקות חשיבה ביקורתית: הערכת טענות, אומדן וקבלת החלטות מנומקות. ייצוגים: מילולי, מספרי, גרפי, סימבולי.', 'Some questions assess critical thinking: evaluating claims, estimating, making justified decisions. Representations: verbal, numerical, graphical, symbolic.'],
+  ['مستويات التفكير: معرفة المفاهيم والحقائق ← تفكير خوارزمي (حساب روتيني) ← تفكير إجرائي (ربط مفاهيم وحل قائم على الاستبصار) ← بحث مفتوح (تحليل وتركيب، استقصاء، تعليل، حل مشكلات). المفرط لا يحدد نسبًا لهذه المستويات.',
+   'רמות חשיבה: ידע והכרת מושגים ועובדות ← חשיבה אלגוריתמית ← חשיבה תהליכית (קישור מושגים, פתרון מבוסס תובנה) ← חיפוש פתוח (ניתוח וסינתזה, חקר, הנמקה, פתרון בעיות). המפרט אינו קובע אחוזים לרמות.',
+   'Thinking levels: knowledge of concepts & facts → algorithmic thinking → process thinking (linking concepts, insight-based solutions) → open search (analysis & synthesis, inquiry, reasoning, problem solving). The specification gives no percentages for these levels.'],
+];
+const MIN_SCI_DOMAINS = {
+  chemistry: [['الكيمياء – علوم المواد', 'כימיה – מדעי החומר', 'Chemistry – materials science'],
+    ['المواد: مبناها وخصائصها وتغيّراتها واستعمالاتها', 'חומרים: מבנה, תכונות, שינויים ושימושים', 'Materials: structure, properties, changes and uses'], 35],
+  biology: [['الأحياء – علوم الحياة', 'ביולוגיה – מדעי החיים', 'Biology – life sciences'],
+    ['أجهزة وعمليات في الكائنات الحية؛ الأنظمة البيئية', 'מערכות ותהליכים ביצורים חיים; מערכות אקולוגיות', 'Systems and processes in living organisms; ecological systems'], 40],
+  physics: [['الفيزياء – علوم المواد', 'פיזיקה – מדעי החומר', 'Physics – materials science'],
+    ['الطاقة (مع التركيز على تحوّلات الطاقة وطاقة الحركة والتطبيقات التكنولوجية)؛ القوى', 'אנרגיה (בדגש על המרות אנרגיה, אנרגיה קינטית ויישומים טכנולוגיים); כוחות', 'Energy (emphasis on energy conversions, kinetic energy, technological applications); forces'], 25],
+};
+const MIN_SCI_NOTES = [
+  ['4–5 وحدات، كل وحدة تبدأ بنص معلومات يصف ظاهرة علمية أو بحثًا، وتليه أسئلة من مجالات مختلفة؛ التكنولوجيا (العالم من صنع الإنسان) مدمجة داخل الوحدات.',
+   '4–5 יחידות, כל אחת פותחת בקטע מידע על תופעה מדעית או מחקר ואחריו שאלות מתחומים שונים; הטכנולוגיה (העולם מעשה ידי אדם) משולבת ביחידות.',
+   '4–5 units, each opening with an information passage on a scientific phenomenon or study, followed by questions from different domains; technology (the human-made world) is woven into the units.'],
+  ['نحو 30 سؤالًا في 90 دقيقة: نحو النصف مغلقة ونحو النصف مفتوحة، والأسئلة المفتوحة تفحص أيضًا الاستعمال الصحيح للغة العلمية. يُسمح بالآلة الحاسبة.',
+   'כ-30 שאלות ב-90 דקות: כמחצית סגורות וכמחצית פתוחות; השאלות הפתוחות בודקות גם שימוש נכון בשפה מדעית. מותר מחשבון.',
+   'About 30 questions in 90 minutes: about half closed and half open; open questions also assess correct use of scientific language. Calculator allowed.'],
+  ['كفايات الثقافة العلمية: التوجّه العلمي، التفسير العلمي للظواهر، تخطيط البحث وتنفيذه وتقييمه، التفسير العلمي للمعطيات والأدلة. بعض الأسئلة تفحص التفكير الإبداعي والنقدي.',
+   'יכולות האוריינות המדעית: התמצאות מדעית, הסבר מדעי של תופעות, תכנון, ביצוע והערכת מחקר, פרשנות מדעית של נתונים וראיות. חלק מהשאלות בודקות חשיבה יצירתית וביקורתית.',
+   'Scientific-literacy competencies: scientific orientation, scientific explanation of phenomena, planning/conducting/evaluating inquiry, scientific interpretation of data and evidence. Some questions assess creative and critical thinking.'],
+  ['يُفحص فقط ما هو إلزامي في الصفوف 7–9 (بدون مواضيع الإثراء)؛ الوراثة غير مشمولة في امتحان تشفاز.', 'נבדקים רק נושאי חובה מכיתות ז\'–ט\' (ללא העשרה); תורשה אינה נכללת במבחן תשפ"ז.', 'Only compulsory Grade 7–9 topics are tested (no enrichment); heredity is not included in the 2026–27 exam.'],
+];
+
+const gradeNum = () => { const v = gv('grade'); return v === '' ? null : +v + 7; };
+function minSpec() {
+  const g0 = gradeNum();
+  const G = g0 || 9;
+  const isMath = subject === 'math';
+  const spec = { G, defaulted: !g0, interp: G === 7 || G === 8, bagrut: G >= 10, single: false, isMath, rows: [], notes: [] };
+  if (isMath) {
+    spec.rows = MIN_MATH_ROWS;
+    spec.notes = MIN_MATH_NOTES;
+  } else {
+    if (subject === 'general') spec.rows = [MIN_SCI_DOMAINS.chemistry, MIN_SCI_DOMAINS.biology, MIN_SCI_DOMAINS.physics];
+    else { spec.single = true; const d = MIN_SCI_DOMAINS[subject]; spec.rows = [[d[0], d[1], 100]]; }
+    spec.notes = MIN_SCI_NOTES;
+  }
+  return spec;
+}
+
+function renderMin() {
+  const box = document.getElementById('min-structure');
+  if (!box) return;
+  const t = T[uiLang];
+  const sp = minSpec();
+  let h = `<div class="hint">${esc(sp.isMath ? t.min_hint_math : t.min_hint_sci)} <a href="${sp.isMath ? MIN_SRC.math : MIN_SRC.sci}" target="_blank" rel="noopener">${esc(t.min_src)}</a></div>`;
+  if (sp.defaulted) h += `<div class="field-note" style="margin-bottom:8px">${esc(t.min_no_grade)}</div>`;
+  if (sp.interp) h += `<div class="field-note" style="margin-bottom:8px">${esc(t.min_interp)}</div>`;
+  if (sp.bagrut) h += `<div class="field-note" style="margin-bottom:8px">${esc(t.min_bagrut)}</div>`;
+  if (sp.single) h += `<div class="field-note" style="margin-bottom:8px">${esc(t.min_single)}</div>`;
+  const c = t.min_cols;
+  h += `<table class="std-table"><tr><th>${c[0]}</th><th>${c[1]}</th><th>${c[2]}</th></tr>`;
+  sp.rows.forEach((r) => { h += `<tr><td class="l" style="font-weight:700">${esc(L3(r[0]))}</td><td class="l">${esc(L3(r[1]))}</td><td>${sp.rows.length > 1 ? '~' : ''}${r[2]}%</td></tr>`; });
+  h += '</table>';
+  h += '<ul class="field-note" style="padding-inline-start:18px">' + sp.notes.map((n) => `<li>${esc(L3(n))}</li>`).join('') + '</ul>';
+  box.innerHTML = h;
+}
+
+function minPrompt(total) {
+  const sp = minSpec();
+  const out = [];
+  const gName = GRADES[sp.G - 7] ? GRADES[sp.G - 7][0] : `الصف ${sp.G}`;
+  const what = sp.isMath ? 'امتحان تنوفا في الرياضيات للصف التاسع' : 'امتحان تنوفا في العلوم والتكنولوجيا للصف التاسع';
+  out.push(`المبنى وفق مواصفات وزارة التربية والتعليم وراما (مفرط ${what}، تشفاز)${sp.G !== 9 ? `، مُكيَّفًا لـ${gName}` : ''}.`);
+  if (sp.interp) out.push('- هذا المبنى مأخوذ من امتحان الصف التاسع: حافظ على شكله وأنواع أسئلته، لكن اسأل فقط عن المواضيع المذكورة أدناه وبمستوى هذا الصف.');
+  if (sp.bagrut) out.push('- لا يوجد امتحان تنوفا لهذا الصف، ولامتحانات البجروت مواصفات خاصة: استعمل أسلوب تنوفا (وحدات وسياقات واقعية وأنواع الأسئلة) بمستوى هذا الصف والمسار، ولا تقدّمه على أنه مبنى بجروت.');
+  if (sp.single) out.push(`- امتحان تنوفا متكامل؛ هنا يُطبَّق مبناه على ${SUBJ_DEF[subject]} فقط.`);
+  out.push(`| المجال | المحتوى | الوزن |\n|---|---|---|`);
+  sp.rows.forEach((r) => out.push(`| ${r[0][0]} | ${r[1][0]} | ${sp.rows.length > 1 ? 'نحو ' : ''}${r[2]}% = ${Math.round(r[2] * total / 100)} علامة |`));
+  sp.notes.forEach((n) => out.push(`- ${n[0]}`));
+  if (sp.rows.length > 1) out.push('- إذا كانت المواضيع المطلوبة لا تغطي كل المجالات، وزّع الوزن على المجالات المغطّاة بنفس النسب تقريبًا، ولا تسأل عن مجال غير مذكور، واذكر ذلك في الملخص.');
+  if (!sp.isMath) out.push('- إذا أرفق المعلم نصوصًا علمية (أدناه) فاستعملها نصوصَ معلومات للوحدات بالترتيب، وإلا فاكتب نصوص معلومات أصلية قصيرة مبنية على المواضيع المطلوبة فقط.');
+  out.push(`- المجموع ${total} علامة بالضبط، والعلامة بجانب كل بند. داخل كل وحدة أو مجال رتّب البنود من الأسهل إلى الأصعب.`);
+  return out.join('\n');
+}
+
+// ══════════════════════════════════════════
+//  QUESTION COUNT & LOWER/HIGHER-ORDER BALANCE
+// ══════════════════════════════════════════
+const suggestQ = () => { const d = +gv('duration') || 90; return Math.max(6, Math.min(30, Math.round(d / 3))); };
+const customQSum = () => [...document.querySelectorAll('.sec-q')].reduce((a, el) => a + (parseInt(el.value, 10) || 0), 0);
+function questionCount() {
+  if (structure === 'std') return 15;
+  if (structure === 'custom' && customQSum() > 0) return customQSum();
+  const v = parseInt(gv('q-count'), 10);
+  return qTouched && v > 0 ? v : suggestQ();
+}
+function renderBalance() {
+  const inp = document.getElementById('q-count');
+  if (!inp) return;
+  const t = T[uiLang];
+  const total = +gv('total-mark') || 100;
+  const fromSections = structure === 'custom' && customQSum() > 0;
+  const locked = structure === 'std' || fromSections;
+  inp.disabled = locked;
+  if (locked || !qTouched) inp.value = questionCount();
+  const n = questionCount();
+  let note = structure === 'std' ? t.q_note_std : fromSections ? t.q_note_custom_sum : structure === 'min' ? t.q_note_min : t.q_note_free;
+  const d = +gv('duration') || 90;
+  if (!locked && n > d / 2.5) note += ' ' + t.q_warn_many.replace('{d}', d);
+  document.getElementById('q-note').textContent = note;
+  const slider = document.getElementById('low-pct');
+  slider.value = lowPct;
+  document.getElementById('low-pct-val').textContent = lowPct;
+  const lowPts = Math.round(total * lowPct / 100);
+  const lo = document.getElementById('bal-low'), hi = document.getElementById('bal-high');
+  lo.style.width = lowPct + '%'; hi.style.width = (100 - lowPct) + '%';
+  const loFull = `${t.bal_low_short} ${lowPct}% · ${lowPts} ${t.bal_marks}`;
+  const hiFull = `${t.bal_high_short} ${100 - lowPct}% · ${total - lowPts} ${t.bal_marks}`;
+  lo.textContent = lowPct < 30 ? `${lowPct}%` : loFull; lo.title = loFull;
+  hi.textContent = 100 - lowPct < 30 ? `${100 - lowPct}%` : hiFull; hi.title = hiFull;
+  const w = document.getElementById('bal-warn');
+  const msg = lowPct >= 80 ? t.bal_warn_low : lowPct <= 40 ? t.bal_warn_high : '';
+  w.textContent = msg; w.style.display = msg ? 'block' : 'none';
+}
+function resetBalance() { lowPct = 60; renderBalance(); }
+
+function balancePrompt(total) {
+  const n = questionCount();
+  const lowPts = Math.round(total * lowPct / 100);
+  const highPts = total - lowPts;
+  const out = ['\n## عدد الأسئلة وتوزيع العلامات على مستويات التفكير'];
+  if (structure === 'std') out.push('- عدد الأسئلة: 15 كما في المبنى المعتمد.');
+  else out.push(`- عدد الأسئلة: ${n} سؤالًا رئيسيًا بالضبط (يجوز أن يكون لبعضها بنود فرعية أ، ب، ج، ولا تُحسب البنود الفرعية أسئلة منفصلة).`);
+  out.push(`- المهارات الدنيا (تذكّر ومعرفة، فهم، تطبيق مباشر لقانون أو إجراء تعلّمه الطالب): ${lowPct}% = ${lowPts} علامة.`);
+  out.push(`- المهارات العليا (تطبيق في موقف جديد، تحليل، استنتاج، تقييم وتبرير، إبداع واقتراح حلول): ${100 - lowPct}% = ${highPts} علامة.`);
+  if (structure === 'std' && lowPct !== 60) out.push(`- هذه النسبة تختلف عن المبنى المعتمد (60/40): حافظ على أنواع الأسئلة الـ15، وأعِد توزيع العلامات بين القسمين (أو انقل سؤالًا من قسم إلى آخر) حتى يصبح التوزيع ${lowPct}/${100 - lowPct}.`);
+  if (structure === 'min') out.push('- مفرط تنوفا لا يحدد نسبًا لمستويات التفكير؛ طبّق هذا التوزيع داخل المجالات والوحدات، بحيث يكون في كل وحدة بنود دنيا وبنود عليا.');
+  out.push('- السؤال الذي يجمع بين مستويين: صنّف كل بند فرعي منه حسب مستواه.');
+  out.push('- في جدول المواصفات أضف عمود «المستوى: دنيا/عليا»، وفي آخره سطرًا يجمع علامات كل مستوى ونسبته، وتحقّق أنه يطابق التوزيع أعلاه.');
+  return out.join('\n');
 }
 
 // ══════════════════════════════════════════
@@ -1516,7 +1808,9 @@ function generateBuild() {
 5. لا يوجد سؤال يكشف إجابة سؤال آخر (افحص عبارات صح/خطأ وأكمل الفراغ مقابل الأسئلة المفتوحة، ولا تكتب القانون أو التعريف داخل سؤال يطلبه).`);
 
   out.push('\n## مبنى الأداة (من الأسهل إلى الأصعب)');
-  if (structure === 'std') {
+  if (structure === 'min') {
+    out.push(minPrompt(+total || 100));
+  } else if (structure === 'std') {
     out.push(STD_PROMPT);
     if (total !== '100') out.push(`حافظ على النسب نفسها (60% / 40%) وعدّل العلامات لتصبح العلامة الكلية ${total} بالضبط.`);
     else out.push('المجموع 100 بالضبط.');
@@ -1525,6 +1819,7 @@ function generateBuild() {
     rows.forEach((r, i) => out.push(`- القسم ${i + 1}: ${r.t || '(يحدده المحرك)'} – ${r.q || '?'} أسئلة، ${r.p || '?'} علامة`));
     out.push(`- المجموع ${total} علامة. رتّب الأسئلة من الأسهل إلى الأصعب، ونوّع مستويات بلوم (تذكّر، فهم، تطبيق، تحليل، استنتاج، تقييم)، واذكر العلامة بجانب كل سؤال.`);
   }
+  out.push(balancePrompt(+total || 100));
 
   if (texts.length) {
     out.push('\n## نصوص علمية (قراءة وفهم وتحليل)');
@@ -1540,6 +1835,7 @@ function generateBuild() {
     });
     out.push('- أسئلة النص متدرّجة: استخراج معلومة (مع رقم السطر)، شرح مصطلح من السياق، الفكرة المركزية، ربط بمفهوم متعلَّم، قراءة جدول/رسم، متغيرات التجربة وفرضيتها، ثم استنتاج أو توقّع.');
     if (structure === 'std') out.push('- في المبنى المعتمد: يحلّ بلوك النص محل السؤالين 13 و14 (16 علامة) مع الحفاظ على توزيع بلوم.');
+    if (structure === 'min') out.push('- في مبنى الوزارة: كل نص هو نص المعلومات لوحدة من الوحدات، وأسئلته جزء من عدد الأسئلة والتوزيع أعلاه.');
   }
 
   if (qts.length) out.push('\n## أنواع الأسئلة المفضلة\n' + qts.map((q) => `- ${q}`).join('\n'));
