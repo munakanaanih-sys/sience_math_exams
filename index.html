@@ -790,6 +790,7 @@
         <div class="panel-header" data-t="attach_header">📎 المرفقات التي سترفقها مع الأمر</div>
         <div class="panel-body">
           <div class="hint" data-t="attach_hint">💡 صوّر اللوح وصفحات الكتاب بإضاءة جيدة ومن الأمام، وارفع فقط ما يخص مواضيع الأداة. صورة لموضوع آخر قد تُدخل أسئلة لم تقصدها.</div>
+          <div style="margin-bottom:12px"><button type="button" class="btn-add" onclick="downloadLogo()" data-t="logo_btn">⬇️ تنزيل شعار المنصة (لإرفاقه مع الأمر)</button></div>
           <div class="checkbox-grid" id="attach-grid"></div>
         </div>
       </div>
@@ -1009,6 +1010,7 @@ const T = {
     improve_notes_placeholder: 'مثال: أضف مادة جديدة (دمج قانون نيوتن الثاني مع قوانين الحركة)، أنشئ صورة للسؤال 14...',
     improve_btn: '✨ أنشئ أمر التحسين ←',
     result_ready: '✅ الأمر جاهز! انسخه والصقه في Claude أو ChatGPT', copy_btn: '📋 انسخ الأمر', copy_success: '✅ تم النسخ!',
+    logo_btn: '⬇️ تنزيل شعار المنصة (لإرفاقه مع الأمر)',
     reminder: '📎 لا تنسَ أن ترفق مع الأمر: ', reminder_improve: '📎 لا تنسَ أن ترفق مع الأمر آخر نسخة من الأداة (ملف Word).',
     need_topics: 'الرجاء كتابة المواضيع المطلوبة أولًا.',
     greeting: (n) => `مرحباً، <span>${n}</span>! 👋 ماذا تريد أن تفعل اليوم؟`,
@@ -1084,6 +1086,7 @@ const T = {
     improve_notes_placeholder: 'לדוגמה: הוסיפו חומר חדש, צרו איור לשאלה 14...',
     improve_btn: '✨ צרו פקודה לשיפור ←',
     result_ready: '✅ הפקודה מוכנה! העתיקו אותה ל-Claude או ChatGPT', copy_btn: '📋 העתיקו את הפקודה', copy_success: '✅ הועתק!',
+    logo_btn: '⬇️ הורדת לוגו הפלטפורמה (לצירוף לפקודה)',
     reminder: '📎 אל תשכחו לצרף לפקודה: ', reminder_improve: '📎 אל תשכחו לצרף את הגרסה האחרונה של הכלי (קובץ Word).',
     need_topics: 'נא לכתוב קודם את הנושאים הנדרשים.',
     greeting: (n) => `ברוכים הבאים, <span>${n}</span>! 👋 מה תרצו לעשות היום?`,
@@ -1159,6 +1162,7 @@ const T = {
     improve_notes_placeholder: 'e.g. Add new material, create a figure for question 14...',
     improve_btn: '✨ Generate Improvement Prompt →',
     result_ready: '✅ Prompt ready! Copy and paste it into Claude or ChatGPT', copy_btn: '📋 Copy Prompt', copy_success: '✅ Copied!',
+    logo_btn: '⬇️ Download the platform logo (to attach to the prompt)',
     reminder: '📎 Remember to attach: ', reminder_improve: '📎 Remember to attach the latest version of the tool (Word file).',
     need_topics: 'Please enter the required topics first.',
     greeting: (n) => `Welcome, <span>${n}</span>! 👋 What would you like to do today?`,
@@ -1231,6 +1235,8 @@ const ATTACH = [
     p: 'ورقة عمل أو تجربة من الصف' },
   { id: 'hdr',   on: true,  l: ['صورة ترويسة المدرسة', 'תמונת כותרת בית הספר', 'School letterhead image'],
     p: 'صورة ترويسة المدرسة: تُوضع كما هي في أعلى الأداة والمفتاح' },
+  { id: 'logo', on: true, l: ['شعار منصة ومضات ذكية (زر التنزيل أعلاه)', 'לוגו פלטפורמת ומדאת ד\'כיה (כפתור ההורדה למעלה)', 'Wamadat platform logo (download button above)'],
+    p: 'شعار منصة ومضات ذكية (ملف صورة): للعلامة المائية في ملف المعلم وللسطر في أسفل الصفحة الأولى من ورقة الطالب' },
 ];
 
 const CONV = {
@@ -1245,7 +1251,7 @@ const CONV = {
     { id: 'nofr', l: ['إهمال الاحتكاك ومقاومة الهواء', 'הזנחת חיכוך והתנגדות אוויר', 'Neglect friction and air resistance'], p: 'إهمال الاحتكاك ومقاومة الهواء (لا يوجد "ضياع" للطاقة) ما لم يُذكر غير ذلك' },
   ],
   chemistry: [
-    { id: 'ptable', on: true, l: ['يُسمح باستعمال الجدول الدوري', 'מותר להשתמש בטבלה המחזורית', 'Periodic table allowed'], p: 'يُسمح باستعمال الجدول الدوري (يُرفق في نهاية الأداة)' },
+    { id: 'ptable', on: false, l: ['يُسمح باستعمال الجدول الدوري', 'מותר להשתמש בטבלה המחזורית', 'Periodic table allowed'], p: 'يُسمح باستعمال الجدول الدوري (يُرفق في نهاية الأداة)' },
     { id: 'states', l: ['حالات المادة (s, l, g, aq) في المعادلات', 'מצבי צבירה (s, l, g, aq) בניסוחים', 'State symbols (s, l, g, aq)'], p: 'كتابة حالات المادة (s, l, g, aq) في المعادلات' },
     { id: 'safety', on: true, l: ['ذكر قواعد الأمان في التجارب', 'כללי בטיחות בניסויים', 'Lab safety rules in experiments'], p: 'ذكر قواعد الأمان المناسبة عند وصف التجارب' },
   ],
@@ -1290,6 +1296,7 @@ const COMP = [
   { id: 'noreveal', on: true, l: ['لا يكشف سؤال إجابة سؤال آخر', 'שאלה לא חושפת תשובה של אחרת', 'No question reveals another'] },
   { id: 'modelB', l: ['نموذج ب مكافئ', 'נוסח ב\' מקביל', 'Equivalent version B'] },
   { id: 'answerSheet', l: ['ورقة إجابة منفصلة للجزء الموضوعي', 'דף תשובות נפרד', 'Separate answer sheet'] },
+  { id: 'brand', on: true, l: ['سطر «أُعدّ بمساعدة منصة ومضات ذكية» أسفل الصفحة الأولى للطالب', 'שורת «ומדאת ד\'כיה» בתחתית העמוד הראשון של התלמיד', '"Prepared with Wamadat" line at the bottom of the student\'s first page'] },
 ];
 
 const IMPROVE = [
@@ -1722,6 +1729,46 @@ function balancePrompt(total) {
   return out.join('\n');
 }
 
+
+// ══════════════════════════════════════════
+//  PLATFORM BRANDING (logo watermark + footer line)
+// ══════════════════════════════════════════
+const LOGO_URL = 'logo.png'; // stored next to index.html in the repo
+const LOGO_URL_FALLBACK = 'https://i.postimg.cc/SNgVgv8L/my-new-icon.png';
+const BRAND_LINE = 'أُعدّ بمساعدة منصة ومضات ذكية – منى مصطفى';
+async function downloadLogo() {
+  try {
+    let r = await fetch(LOGO_URL).catch(() => null);
+    if (!r || !r.ok) r = await fetch(LOGO_URL_FALLBACK, { mode: 'cors' });
+    if (!r.ok) throw new Error(r.status);
+    const url = URL.createObjectURL(await r.blob());
+    const a = document.createElement('a');
+    a.href = url; a.download = 'wamadat-logo.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  } catch (e) {
+    window.open(LOGO_URL, '_blank', 'noopener'); // fallback: open the image so it can be saved
+  }
+}
+function brandPrompt(hasLogo, footer, teacherFile) {
+  const out = ['\n## شعار المنصة وسطر «ومضات ذكية»'];
+  if (hasLogo) {
+    out.push(`- ${teacherFile}: ضع شعار منصة ومضات ذكية المرفق علامةً مائية في وسط كل صفحة: عرضه نحو 12 سم، باهت جدًا (فتّح الصورة نفسها قبل إدراجها بدمجها مع الأبيض حتى تبقى نحو 8–10% فقط من شدتها، لأن خلفية الشعار داكنة)، خلف النص (behind text) بلا التفاف (wrap none)، مثبّت في رأس الصفحة حتى يتكرر في كل الصفحات، ومُوسَّط بالنسبة إلى الهوامش (margin) لا إلى الصفحة (page)، لأن التوسيط بالنسبة إلى الصفحة يدفع المحتوى إلى الصفحة التالية في بعض البرامج. يجب أن يبقى كل النص والجداول مقروءًا تمامًا فوقه.`);
+  } else {
+    out.push('- لم يُرفق الشعار: لا ترسم شعارًا بديلًا ولا تبحث عنه، ولا تضع علامة مائية.');
+    out.push(`- ${teacherFile}: اكتب في أسفل صفحته الأولى سطرًا صغيرًا رماديًا: «${BRAND_LINE}».`);
+  }
+  if (footer) {
+    out.push(`- ملف الطالب: في أسفل الصفحة الأولى فقط (فعّل «تذييل مختلف للصفحة الأولى» Different first page)، سطر واحد صغير وسطَه: ${hasLogo ? 'الشعار المرفق بارتفاع نحو 1 سم، وبجانبه ' : ''}النص «${BRAND_LINE}» بخط رمادي حجم 8–9، بالعربية ومن اليمين إلى اليسار حتى لو كانت الأداة بلغة أخرى. لا يظهر في بقية الصفحات، ولا يأخذ مكان ترقيم الصفحات.`);
+    out.push('- إذا أنشأت نسخًا إضافية للطالب (نموذج ب أو نسخة مكيّفة) فضع السطر نفسه في أسفل صفحتها الأولى.');
+  } else {
+    out.push('- ملف الطالب: بلا شعار وبلا سطر المنصة.');
+  }
+  out.push('- لا علامة مائية في ملف الطالب، حتى يبقى واضحًا عند التصوير والطباعة.');
+  out.push(`- عند الفحص البصري قبل التسليم: تأكد ${hasLogo ? 'أن العلامة المائية باهتة ولا تعيق القراءة، و' : ''}أن السطر في الصفحة الأولى فقط ولا يتداخل مع النص.`);
+  return out.join('\n');
+}
+
 // ══════════════════════════════════════════
 //  START / MODE
 // ══════════════════════════════════════════
@@ -1793,6 +1840,7 @@ function generateBuild() {
   if (att.length) {
     out.push('\n## المرفقات (مرفقة مع هذا الأمر)');
     att.forEach((a) => out.push(`- ${a.p}`));
+    out.push('- إذا لم تجد أحد هذه المرفقات فعلًا مع الأمر فتجاهله ولا تخمّن محتواه؛ وإذا لم تُرفق ترويسة المدرسة فضع بدلها إطارًا بمعلومات الأداة. اذكر في الملخص ما لم تجده.');
   }
   if (conv.length) {
     out.push('\n## اصطلاحات الصف وما يُسمح به');
@@ -1805,7 +1853,8 @@ function generateBuild() {
 2. استعمل نفس المصطلحات والرموز وطريقة الحل التي في الصف والكتاب.
 3. استوحِ الأسئلة من أسئلة الكتاب واللوح (نفس الفكرة والنمط)، لكن بأعداد وأمثلة ومواقف جديدة وليست منسوخة.
 4. المواقف والأعداد واقعية ومناسبة لعمر الطلاب، واللغة واضحة ولا تحتمل أكثر من تفسير.
-5. لا يوجد سؤال يكشف إجابة سؤال آخر (افحص عبارات صح/خطأ وأكمل الفراغ مقابل الأسئلة المفتوحة، ولا تكتب القانون أو التعريف داخل سؤال يطلبه).`);
+5. لا يوجد سؤال يكشف إجابة سؤال آخر (افحص عبارات صح/خطأ وأكمل الفراغ مقابل الأسئلة المفتوحة، ولا تكتب القانون أو التعريف داخل سؤال يطلبه).
+6. المواضيع المذكورة قائمة بما يُفحص، وليست سؤالًا واحدًا لكل موضوع: وزّع البنود حسب أهمية الموضوع ووقت تدريسه، وافحص المواضيع المركزية ببنود متعددة.`);
 
   out.push('\n## مبنى الأداة (من الأسهل إلى الأصعب)');
   if (structure === 'min') {
@@ -1838,7 +1887,7 @@ function generateBuild() {
     if (structure === 'min') out.push('- في مبنى الوزارة: كل نص هو نص المعلومات لوحدة من الوحدات، وأسئلته جزء من عدد الأسئلة والتوزيع أعلاه.');
   }
 
-  if (qts.length) out.push('\n## أنواع الأسئلة المفضلة\n' + qts.map((q) => `- ${q}`).join('\n'));
+  if (qts.length) out.push('\n## أنواع الأسئلة المفضلة\n' + qts.map((q) => `- ${q}`).join('\n') + '\n- استعمل من هذه الأنواع فقط ما يناسب المواضيع المطلوبة أعلاه، ولا تضف سؤالًا يفحص قاعدة أو مهارة غير مذكورة فيها (مثلًا: لا إعراب إذا لم يُذكر الإعراب).');
 
   out.push(`\n## معايير عامة لأنواع الأسئلة
 - صح/خطأ: عبارات مفاهيمية عن المصطلحات والعلاقات والخصائص، وليست عمليات حسابية طويلة؛ 4 صحيحة و4 خاطئة؛ لا يُطلب تصحيح الخاطئة؛ لا تستعمل "دائمًا" أو "أبدًا" كتلميح.
@@ -1853,6 +1902,7 @@ function generateBuild() {
 ### الملف الأول: ${tool}_[الموضوع]_[الصف].docx
 - ${L.fmt}
 - الصيغ والوحدات والتعابير اللاتينية تُعرض بالترتيب الصحيح داخل النص (علامات الاتجاه LRM/RLM أو فقرات مستقلة للصيغ).
+- درجات الحرارة والوحدات داخل جملة عربية تنقلب بسهولة (25°C تظهر «C°25»): اكتبها بالكلمات («25 درجة مئوية») أو اعزلها باتجاه من اليسار إلى اليمين. والأعداد السالبة (−114) تُكتب في خلايا جداول أو فقرات اتجاهها من اليسار إلى اليمين حتى لا تظهر «114−». افحص ذلك بصريًا.
 - ${att.some((a) => a.id === 'hdr') ? 'أعلى الصفحة: صورة ترويسة المدرسة المرفقة، ثم إطار فيه' : 'أعلى الصفحة: إطار فيه'}: المادة، الصف، الوحدة، المدة، العلامة الكلية، التاريخ.
 - حقول الطالب: الاسم، الصف/الشعبة، العلامة النهائية.
 - تعليمات قصيرة تتضمن الاصطلاحات وما يُسمح باستعماله.
@@ -1867,6 +1917,7 @@ function generateBuild() {
   if (comp.includes('spec')) out.push('- جدول المواصفات (السؤال، النوع، مستوى بلوم، العلامة، الجزء من المادة) وتوزيع العلامات حسب مستويات بلوم مع النسب.');
   if (comp.includes('modelB')) out.push('\n## نموذج ب\nأنشئ أيضًا نموذجًا ثانيًا مكافئًا بأعداد ومواقف مختلفة، ونفس المبنى، مع مفتاحه.');
 
+  out.push(brandPrompt(att.some((a) => a.id === 'logo'), comp.includes('brand'), 'ملف مفتاح الإجابات (للمعلم)'));
   if (gv('notes')) out.push('\n## ملاحظات إضافية من المعلم\n' + gv('notes'));
 
   out.push(`\n## قبل التسليم
